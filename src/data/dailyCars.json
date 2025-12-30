@@ -1,0 +1,317 @@
+[
+    {
+        "date": "2025-12-30",
+        "make": "TESLA",
+        "model": "Model S",
+        "year": 2021,
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/2018_Tesla_Model_S_75D.jpg/1920px-2018_Tesla_Model_S_75D.jpg",
+        "transformOrigin": "60% 50%",
+        "maxZoom": 5
+    },
+    {
+        "date": "2025-12-31",
+        "make": "TOYOTA",
+        "model": "Camry",
+        "year": 2023,
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/2018_Toyota_Camry_%28ASV70R%29_Ascent_sedan_%282018-08-27%29_01.jpg/1920px-2018_Toyota_Camry_%28ASV70R%29_Ascent_sedan_%282018-08-27%29_01.jpg",
+        "transformOrigin": "50% 50%",
+        "maxZoom": 4
+    },
+    {
+        "date": "2026-01-01",
+        "make": "Acura",
+        "model": "NSX-T",
+        "year": 2000,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/11/2000_acura_nsx-t_Image-29-72209-scaled.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-02",
+        "make": "Honda",
+        "model": "S2000",
+        "year": 2008,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/2008_honda_s2000_cam_9935-02857.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-03",
+        "make": "Chrysler",
+        "model": "Thunderbolt-Style Children\u2019s Ride",
+        "year": 1941,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/img_2178-40741.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-04",
+        "make": "Toyota",
+        "model": "FJ Cruiser 6-Speed",
+        "year": 2007,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/10/2007_toyota_fj-cruiser_img_7341-05159.jpeg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-05",
+        "make": "Lexus",
+        "model": "GS350 F Sport AWD",
+        "year": 2017,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/11/2017_lexus_gs350-f-sport_2017_lexus_gs350-f-sport_3e6b9f5f-81f1-47f1-bbf8-964ad425ee13-9voyey-95113-96878.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-06",
+        "make": "Toyota",
+        "model": "Land Cruiser FJ60",
+        "year": 1982,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/09/1982_toyota_land-cruiser-fj60_img_1048-72288.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-07",
+        "make": "Toyota",
+        "model": "Celica GT 5-Speed",
+        "year": 1984,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/1984_toyota_celica-gt_img_2399-30320.jpeg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-08",
+        "make": "Toyota",
+        "model": "Land Cruiser FJ40",
+        "year": 1978,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/1978_toyota_land-cruiser-fj40_20251101_175419-24365-scaled-qnlm2a_e7ebf8-57601.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-09",
+        "make": "Honda",
+        "model": "CL70 Scrambler",
+        "year": 1971,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/1971_honda_cl70_5c5b07cf-54a9-4c44-b771-77e1e3c858fc-03431.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-10",
+        "make": "Honda",
+        "model": "S2000",
+        "year": 2000,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/11/2000_honda_s2000_img_8110-33128.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-11",
+        "make": "Nissan",
+        "model": "GT-R Track Edition",
+        "year": 2014,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/2014_nissan_gt-r-track-edition_img_0805-13757.jpeg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-12",
+        "make": "Toyota",
+        "model": "Sienna LE V6",
+        "year": 2003,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/2007_toyota_sienna_dsc00672-25498.jpeg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-13",
+        "make": "Toyota",
+        "model": "Land Cruiser FJ40",
+        "year": 1975,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/07/1975_toyota_land-cruiser-fj40_20250918_130727-18520.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-14",
+        "make": "Mazda",
+        "model": "RX-7 GS 5-Speed",
+        "year": 1985,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/1985_mazda_rx-7_002-13022.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-15",
+        "make": "Infiniti",
+        "model": "M35 Sport",
+        "year": 2008,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/11/2008_infiniti_m35_img_9050-11399.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-16",
+        "make": "Toyota",
+        "model": "FJ Cruiser",
+        "year": 2012,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/2012_toyota_fj-cruiser_036a3117-82881.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-17",
+        "make": "Honda",
+        "model": "Civic Type R Touring",
+        "year": 2019,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/10/2019_honda_civic-type-r-touring_2019_honda_civic-type-r-touring_243e3fba-17df-4958-8427-be141603ee1b-cayus7-01066-52361.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-18",
+        "make": "Datsun",
+        "model": "280Z 5-Speed",
+        "year": 1977,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/1977_datsun_280z_img_6933-04499.jpeg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-19",
+        "make": "Mazda",
+        "model": "RX-7 5-Speed",
+        "year": 1993,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/06/1993_mazda_rx-7-uscan_img_6241-46967.jpeg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-20",
+        "make": "Toyota",
+        "model": "Land Cruiser FJ60 LS3",
+        "year": 1987,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/1987_toyota_land-cruiser-fj60_dsc01337-73696.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-21",
+        "make": "Suzuki",
+        "model": "GSX-R1100",
+        "year": 1991,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/11/1991_suzuki_gsx-r1100_img_4182-10722.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-22",
+        "make": "Toyota",
+        "model": "Tacoma TRD Off-Road Double Cab 4\u00d74 V6",
+        "year": 2017,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/11/2017_toyota_tacoma_dsc00892-12359.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-23",
+        "make": "Honda",
+        "model": "S2000",
+        "year": 2003,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/2003_honda_s2000_img_4646-78088.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-24",
+        "make": "Nissan",
+        "model": "240SX",
+        "year": 1997,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/07/1997_nissan_240sx_img_9723-35827.jpeg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-25",
+        "make": "Acura",
+        "model": "NSX",
+        "year": 2019,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/11/2019_acura_nsx_a03-75508.jpeg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-26",
+        "make": "Mitsubishi",
+        "model": "Eclipse GS-T Spyder 5-Speed",
+        "year": 1998,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/1998_mitsubishi_eclipse_img_6561-74130.jpeg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-27",
+        "make": "Nissan",
+        "model": "300ZX Turbo 50th Anniversary 5-Speed",
+        "year": 1984,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/1984_nissan_300zx-turbo_img_0282-30737.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-28",
+        "make": "Honda",
+        "model": "TR200 Fat Cat",
+        "year": 1986,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/1986_honda_tr200-fat-cat_IMG_7395-03863-scaled.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-29",
+        "make": "Toyota",
+        "model": "Tundra SR5 AccessCab V8",
+        "year": 2002,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/2002_toyota_tundra_img_8602-02274.jpeg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-30",
+        "make": "Toyota",
+        "model": "Land Cruiser FJ40",
+        "year": 1968,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/11/1968_toyota_land-cruiser-fj40_baker_fj_4535-30934.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-01-31",
+        "make": "Toyota",
+        "model": "HiAce Double Cab Fire Truck Diesel 4\u00d74 5-Speed",
+        "year": 1991,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/FiretruckDec25-78-16316.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-02-01",
+        "make": "Honda",
+        "model": "CT70 Trail",
+        "year": 1970,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/11/1970_honda_ct70h-trail_2156-19621.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    },
+    {
+        "date": "2026-02-02",
+        "make": "Nissan",
+        "model": "Skyline 25GT 5-Speed",
+        "year": 1998,
+        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/12/1998_nissan_skyline-gt-r_nissan-skyline_20251202-001-63071.jpg",
+        "transformOrigin": "center center",
+        "maxZoom": 5
+    }
+]
