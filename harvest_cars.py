@@ -262,7 +262,13 @@ def main():
         last_date += datetime.timedelta(days=1)
         next_date_str = last_date.strftime("%Y-%m-%d")
         
+        # Calculate next ID
+        next_id = 1
+        if existing_data:
+            next_id = max(item.get('id', 0) for item in existing_data) + 1
+            
         entry = {
+            "id": next_id,
             "date": next_date_str,
             "make": parsed['make'],
             "model": parsed['model'],

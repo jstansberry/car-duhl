@@ -9,7 +9,7 @@ const GameOverModal = ({ dailyCar, guesses, gameState, onClose }) => {
         const date = new Date().toISOString().split('T')[0];
         const status = gameState === 'won' ? `${guesses.length}/5` : 'X/5';
 
-        let text = `Cardle ${date} ${status}\n\n`;
+        let text = `Car-duhl ${date} ${status}\n\n`;
 
         guesses.forEach((guess, index) => {
             const makeIcon = guess.isMakeCorrect ? '🟢' : '🔴';
@@ -19,7 +19,7 @@ const GameOverModal = ({ dailyCar, guesses, gameState, onClose }) => {
             text += `${index + 1}. ${makeIcon}${modelIcon}${yearIcon} ${guess.make} ${guess.model} ${guess.year}\n`;
         });
 
-        text += '\nPlay at: http://localhost:3000'; // Update with real URL later
+        text += '\nPlay at: https://carduhl.vercel.app/'; // Update with real URL later
         return text;
     };
 
@@ -40,7 +40,7 @@ const GameOverModal = ({ dailyCar, guesses, gameState, onClose }) => {
 
                 <div style={styles.carDisplay}>
                     <img
-                        src={dailyCar.imageUrl}
+                        src={dailyCar.gameOverImageURL || dailyCar.imageUrl}
                         alt="The Car"
                         style={styles.image}
                     />

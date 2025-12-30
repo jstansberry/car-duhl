@@ -3519,10 +3519,6 @@
                     "model": "Eclipse"
                 },
                 {
-                    "id": 1586,
-                    "model": "Eclipse GS-T Spyder 5-Speed"
-                },
-                {
                     "id": 174,
                     "model": "Endeavor"
                 },
@@ -3651,10 +3647,6 @@
                     "model": "300ZX"
                 },
                 {
-                    "id": 2486,
-                    "model": "300ZX Turbo 50th Anniversary 5-Speed"
-                },
-                {
                     "id": 152,
                     "model": "350Z"
                 },
@@ -3744,7 +3736,7 @@
                 },
                 {
                     "id": 2487,
-                    "model": "Skyline 25GT 5-Speed"
+                    "model": "Skyline 25GT"
                 },
                 {
                     "id": 1501,
@@ -4884,7 +4876,7 @@
                 },
                 {
                     "id": 1587,
-                    "model": "GSX-R1100"
+                    "model": "GSX"
                 },
                 {
                     "id": 1506,
@@ -5034,7 +5026,7 @@
                 },
                 {
                     "id": 3813,
-                    "model": "HiAce Double Cab Fire Truck Diesel 4\u00d74 5-Speed"
+                    "model": "HiAce"
                 },
                 {
                     "id": 1387,
@@ -5105,20 +5097,12 @@
                     "model": "Tacoma"
                 },
                 {
-                    "id": 3811,
-                    "model": "Tacoma TRD Off-Road Double Cab 4\u00d74 V6"
-                },
-                {
                     "id": 44,
                     "model": "Tercel"
                 },
                 {
                     "id": 3441,
                     "model": "Tundra"
-                },
-                {
-                    "id": 3812,
-                    "model": "Tundra SR5 AccessCab V8"
                 },
                 {
                     "id": 3408,

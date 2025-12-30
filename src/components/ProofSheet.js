@@ -31,6 +31,14 @@ const ProofSheet = () => {
                             <a href={car.imageUrl} target="_blank" rel="noopener noreferrer" style={styles.link}>
                                 View Source Image
                             </a>
+                            {car.gameOverImageURL && (
+                                <>
+                                    <br />
+                                    <a href={car.gameOverImageURL} target="_blank" rel="noopener noreferrer" style={{ ...styles.link, color: '#e94560' }}>
+                                        View Reveal Image
+                                    </a>
+                                </>
+                            )}
                         </div>
                     </div>
                 ))}

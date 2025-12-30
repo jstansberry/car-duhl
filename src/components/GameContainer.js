@@ -11,10 +11,33 @@ const GameContainer = () => {
 
     // Fallback to first car if today isn't found (for demo purposes)
     const dailyCar = dailyCars.find(c => c.date === today) || dailyCars[0];
+    const storageKey = `cardle_state_${dailyCar.date}`;
 
-    const [guesses, setGuesses] = useState([]);
-    const [gameState, setGameState] = useState('playing'); // playing, won, lost
-    const [showModal, setShowModal] = useState(false);
+    const [guesses, setGuesses] = useState(() => {
+        const saved = localStorage.getItem(storageKey);
+        return saved ? JSON.parse(saved).guesses : [];
+    });
+
+    const [gameState, setGameState] = useState(() => {
+        const saved = localStorage.getItem(storageKey);
+        return saved ? JSON.parse(saved).gameState : 'playing';
+    });
+
+    const [showModal, setShowModal] = useState(() => {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+            const { gameState } = JSON.parse(saved);
+            return gameState === 'won' || gameState === 'lost';
+        }
+        return false;
+    });
+
+    useEffect(() => {
+        localStorage.setItem(storageKey, JSON.stringify({
+            guesses,
+            gameState
+        }));
+    }, [guesses, gameState, storageKey]);
 
     const handleGuess = (guess) => {
         if (gameState !== 'playing') return;
