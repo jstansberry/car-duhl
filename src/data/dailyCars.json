@@ -11,15 +11,15 @@
         "maxZoom": 4.8
     },
     {
-        "id": 3,
+        "id": 1897,
         "date": "2025-12-31",
-        "make": "ACURA",
-        "model": "NSX",
-        "year": 2000,
-        "imageUrl": "https://bringatrailer.com/wp-content/uploads/2025/11/2000_acura_nsx-t_Image-186-71649-scaled.jpg",
-        "gameOverImageURL": "https://bringatrailer.com/wp-content/uploads/2025/11/2000_acura_nsx-t_Image-29-72209-scaled.jpg",
-        "transformOrigin": "35% 50%",
-        "maxZoom": 2.5
+        "make": "MASSEY FERGUSON",
+        "model": "Tractor",
+        "year": 2025,
+        "imageUrl": "https://static.wixstatic.com/media/7c444a_838456c66683487a84ac80f88778173e~mv2.jpg/v1/fill/w_2220,h_1200,al_c,q_90,enc_auto/7c444a_838456c66683487a84ac80f88778173e~mv2.jpg",
+        "gameOverImageURL": "",
+        "transformOrigin": "65% 50%",
+        "maxZoom": 4.6
     },
     {
         "id": 4,
