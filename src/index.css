@@ -30,6 +30,7 @@ h3 {
 h1 {
   background: -webkit-linear-gradient(45deg, #e94560, #a3f7bf);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 3rem;
   letter-spacing: 2px;
@@ -110,6 +111,7 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 @keyframes fadeIn {
@@ -121,5 +123,15 @@ input[type=number] {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes simpleFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }

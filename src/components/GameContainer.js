@@ -72,12 +72,12 @@ const GameContainer = () => {
         // Check Win
         if (isMakeCorrect && isModelCorrect && isYearCorrect) {
             setGameState('won');
-            setTimeout(() => setShowModal(true), 1500); // Slight delay for dramatic effect
+            setTimeout(() => setShowModal(true), 4000); // Increased for suspense dots
         }
         // Check Loss
         else if (newGuesses.length >= 5) {
             setGameState('lost');
-            setTimeout(() => setShowModal(true), 1500);
+            setTimeout(() => setShowModal(true), 4000);
         }
     };
 
@@ -96,7 +96,11 @@ const GameContainer = () => {
                 maxZoom={dailyCar.maxZoom}
             />
 
-            <GuessForm onGuess={handleGuess} disabled={gameState !== 'playing'} />
+            <GuessForm
+                onGuess={handleGuess}
+                gameState={gameState}
+                onViewResults={() => setShowModal(true)}
+            />
 
             <GuessHistory guesses={guesses} />
 

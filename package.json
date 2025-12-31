@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "concurrently \"npm start\" \"node dev-server.js\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -34,5 +35,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "body-parser": "^2.2.1",
+    "concurrently": "^9.2.1",
+    "cors": "^2.8.5",
+    "express": "^5.2.1"
   }
 }

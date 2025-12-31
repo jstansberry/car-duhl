@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import carsData from '../data/cars.json';
 
-const GuessForm = ({ onGuess, disabled }) => {
+const GuessForm = ({ onGuess, gameState, onViewResults }) => {
     const [selectedMake, setSelectedMake] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
     const [year, setYear] = useState('');
@@ -41,7 +41,7 @@ const GuessForm = ({ onGuess, disabled }) => {
                 <select
                     value={selectedMake}
                     onChange={(e) => setSelectedMake(e.target.value)}
-                    disabled={disabled}
+                    disabled={gameState !== 'playing'}
                     style={{ ...styles.input, flex: '0 1 120px' }}
                     required
                 >
@@ -54,7 +54,7 @@ const GuessForm = ({ onGuess, disabled }) => {
                 <select
                     value={selectedModel}
                     onChange={(e) => setSelectedModel(e.target.value)}
-                    disabled={!selectedMake || disabled}
+                    disabled={!selectedMake || gameState !== 'playing'}
                     style={{ ...styles.input, flex: 2 }}
                     required
                 >
@@ -69,7 +69,7 @@ const GuessForm = ({ onGuess, disabled }) => {
                     placeholder="Year"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
-                    disabled={disabled}
+                    disabled={gameState !== 'playing'}
                     style={{
                         ...styles.input,
                         width: '70px',
@@ -82,8 +82,15 @@ const GuessForm = ({ onGuess, disabled }) => {
                     required
                 />
             </div>
-            <button type="submit" disabled={disabled} style={styles.button}>
-                GUESS
+            <button
+                type={gameState === 'playing' ? "submit" : "button"}
+                onClick={gameState !== 'playing' ? onViewResults : undefined}
+                style={{
+                    ...styles.button,
+                    backgroundColor: gameState === 'playing' ? '#333' : '#e94560'
+                }}
+            >
+                {gameState === 'playing' ? 'GUESS' : 'VIEW RESULTS'}
             </button>
         </form>
     );
