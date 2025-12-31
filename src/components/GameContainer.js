@@ -6,8 +6,8 @@ import GameOverModal from './GameOverModal';
 import dailyCars from '../data/dailyCars.json';
 
 const GameContainer = () => {
-    // Current date logic could be improved for timezones, using local string for now
-    const today = new Date().toISOString().split('T')[0];
+    // Use US Eastern Time (America/New_York) to determine the daily car
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
 
     // Fallback to first car if today isn't found (for demo purposes)
     const dailyCar = dailyCars.find(c => c.date === today) || dailyCars[0];

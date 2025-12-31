@@ -6,7 +6,7 @@ const GameOverModal = ({ dailyCar, guesses, gameState, onClose }) => {
     if (gameState === 'playing') return null;
 
     const generateShareText = () => {
-        const date = new Date().toISOString().split('T')[0];
+        const date = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
         const status = gameState === 'won' ? `${guesses.length}/5` : 'X/5';
 
         let text = `Car-duhl ${date} ${status}\n\n`;

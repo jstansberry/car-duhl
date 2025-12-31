@@ -42,7 +42,7 @@ const GuessForm = ({ onGuess, disabled }) => {
                     value={selectedMake}
                     onChange={(e) => setSelectedMake(e.target.value)}
                     disabled={disabled}
-                    style={styles.input}
+                    style={{ ...styles.input, flex: '0 1 120px' }}
                     required
                 >
                     <option value="">Select Make</option>
@@ -55,7 +55,7 @@ const GuessForm = ({ onGuess, disabled }) => {
                     value={selectedModel}
                     onChange={(e) => setSelectedModel(e.target.value)}
                     disabled={!selectedMake || disabled}
-                    style={styles.input}
+                    style={{ ...styles.input, flex: 2 }}
                     required
                 >
                     <option value="">Select Model</option>
@@ -72,7 +72,8 @@ const GuessForm = ({ onGuess, disabled }) => {
                     disabled={disabled}
                     style={{
                         ...styles.input,
-                        width: '80px',
+                        width: '70px',
+                        flex: 'none',
                         MozAppearance: 'textfield', // Firefox
                     }}
                     className="no-spinner"

@@ -307,16 +307,6 @@
             ]
         },
         {
-            "id": 168,
-            "make": "AUTOMOBILI PININFARINA",
-            "models": [
-                {
-                    "id": 1371,
-                    "model": "Battista"
-                }
-            ]
-        },
-        {
             "id": 199,
             "make": "AUTOZAM",
             "models": [
@@ -1115,56 +1105,12 @@
             ]
         },
         {
-            "id": 165,
-            "make": "CRUISE",
-            "models": [
-                {
-                    "id": 1363,
-                    "model": "Cruise AV"
-                },
-                {
-                    "id": 1366,
-                    "model": "LC40-R"
-                },
-                {
-                    "id": 1367,
-                    "model": "LC44-R"
-                },
-                {
-                    "id": 1368,
-                    "model": "LC45-R"
-                },
-                {
-                    "id": 1369,
-                    "model": "LC47-R"
-                },
-                {
-                    "id": 1365,
-                    "model": "LC78-R"
-                },
-                {
-                    "id": 1364,
-                    "model": "LC79-R"
-                }
-            ]
-        },
-        {
             "id": 151,
             "make": "CX AUTOMOTIVE",
             "models": [
                 {
                     "id": 1329,
                     "model": "CX Automotive"
-                }
-            ]
-        },
-        {
-            "id": 161,
-            "make": "CZINGER",
-            "models": [
-                {
-                    "id": 1335,
-                    "model": "21C"
                 }
             ]
         },
@@ -1377,24 +1323,6 @@
             ]
         },
         {
-            "id": 163,
-            "make": "DONGFENG",
-            "models": [
-                {
-                    "id": 1356,
-                    "model": "Front drive motor"
-                },
-                {
-                    "id": 1355,
-                    "model": "Rear drive motor"
-                },
-                {
-                    "id": 1354,
-                    "model": "Sport "
-                }
-            ]
-        },
-        {
             "id": 79,
             "make": "EAGLE",
             "models": [
@@ -1435,16 +1363,6 @@
                 {
                     "id": 1160,
                     "model": "Equus Passenger Car"
-                }
-            ]
-        },
-        {
-            "id": 55,
-            "make": "FALCON",
-            "models": [
-                {
-                    "id": 1117,
-                    "model": "F-7"
                 }
             ]
         },
@@ -2317,20 +2235,6 @@
             ]
         },
         {
-            "id": 196,
-            "make": "ISO",
-            "models": [
-                {
-                    "id": 1558,
-                    "model": "Grifo"
-                },
-                {
-                    "id": 1559,
-                    "model": "Rivolta"
-                }
-            ]
-        },
-        {
             "id": 44,
             "make": "ISUZU",
             "models": [
@@ -2519,16 +2423,6 @@
                 {
                     "id": 1210,
                     "model": "Revero GT"
-                }
-            ]
-        },
-        {
-            "id": 75,
-            "make": "KEPLER MOTORS",
-            "models": [
-                {
-                    "id": 1185,
-                    "model": "Motion"
                 }
             ]
         },
@@ -3433,16 +3327,6 @@
             ]
         },
         {
-            "id": 193,
-            "make": "MESSERSCHMITT",
-            "models": [
-                {
-                    "id": 1545,
-                    "model": "KR200"
-                }
-            ]
-        },
-        {
             "id": 181,
             "make": "MG",
             "models": [
@@ -3911,32 +3795,6 @@
             ]
         },
         {
-            "id": 136,
-            "make": "PAS",
-            "models": [
-                {
-                    "id": 1255,
-                    "model": "AMG"
-                },
-                {
-                    "id": 1254,
-                    "model": "GLD"
-                },
-                {
-                    "id": 1252,
-                    "model": "GLS"
-                },
-                {
-                    "id": 1253,
-                    "model": "HSE"
-                },
-                {
-                    "id": 1256,
-                    "model": "LSX"
-                }
-            ]
-        },
-        {
             "id": 111,
             "make": "PEUGEOT",
             "models": [
@@ -4285,46 +4143,6 @@
             ]
         },
         {
-            "id": 187,
-            "make": "QVALE",
-            "models": [
-                {
-                    "id": 1449,
-                    "model": "Mangusta"
-                }
-            ]
-        },
-        {
-            "id": 191,
-            "make": "RED BULL",
-            "models": [
-                {
-                    "id": 1507,
-                    "model": "RB20"
-                }
-            ]
-        },
-        {
-            "id": 364,
-            "make": "REINDEER",
-            "models": [
-                {
-                    "id": 3870,
-                    "model": "Rudolph"
-                }
-            ]
-        },
-        {
-            "id": 125,
-            "make": "RENAISSANCE",
-            "models": [
-                {
-                    "id": 477,
-                    "model": "Tropica"
-                }
-            ]
-        },
-        {
             "id": 182,
             "make": "RENAULT",
             "models": [
@@ -4503,16 +4321,6 @@
             ]
         },
         {
-            "id": 180,
-            "make": "Santa's",
-            "models": [
-                {
-                    "id": 1401,
-                    "model": "Sleigh"
-                }
-            ]
-        },
-        {
             "id": 58,
             "make": "SATURN",
             "models": [
@@ -4613,86 +4421,6 @@
                 {
                     "id": 1571,
                     "model": "xD"
-                }
-            ]
-        },
-        {
-            "id": 155,
-            "make": "SCUDERIA CAMERON GLICKENHAUS (SCG)",
-            "models": [
-                {
-                    "id": 1276,
-                    "model": "002CS"
-                },
-                {
-                    "id": 1275,
-                    "model": "002S"
-                },
-                {
-                    "id": 1263,
-                    "model": "003C"
-                },
-                {
-                    "id": 1262,
-                    "model": "003CS"
-                },
-                {
-                    "id": 1261,
-                    "model": "003S"
-                },
-                {
-                    "id": 1266,
-                    "model": "004C"
-                },
-                {
-                    "id": 1265,
-                    "model": "004CS"
-                },
-                {
-                    "id": 1264,
-                    "model": "004S"
-                },
-                {
-                    "id": 1269,
-                    "model": "005C"
-                },
-                {
-                    "id": 1268,
-                    "model": "005CS"
-                },
-                {
-                    "id": 1267,
-                    "model": "005S"
-                },
-                {
-                    "id": 1272,
-                    "model": "006C"
-                },
-                {
-                    "id": 1271,
-                    "model": "006CS"
-                },
-                {
-                    "id": 1270,
-                    "model": "006S"
-                },
-                {
-                    "id": 1273,
-                    "model": "007CS"
-                },
-                {
-                    "id": 1274,
-                    "model": "008S"
-                }
-            ]
-        },
-        {
-            "id": 154,
-            "make": "SF MOTORS INC.",
-            "models": [
-                {
-                    "id": 1260,
-                    "model": "SF5"
                 }
             ]
         },
@@ -5017,10 +4745,6 @@
                     "model": "FJ Cruiser"
                 },
                 {
-                    "id": 3805,
-                    "model": "FJ Cruiser 6-Speed"
-                },
-                {
                     "id": 66,
                     "model": "GR86"
                 },
@@ -5155,64 +4879,12 @@
             ]
         },
         {
-            "id": 121,
-            "make": "UCC",
-            "models": [
-                {
-                    "id": 471,
-                    "model": "32"
-                },
-                {
-                    "id": 470,
-                    "model": "427"
-                },
-                {
-                    "id": 472,
-                    "model": "53"
-                }
-            ]
-        },
-        {
-            "id": 188,
-            "make": "ULTIMA",
-            "models": [
-                {
-                    "id": 1452,
-                    "model": "GTR (Ultima)"
-                }
-            ]
-        },
-        {
             "id": 195,
             "make": "VECTOR",
             "models": [
                 {
                     "id": 1555,
                     "model": "M12"
-                }
-            ]
-        },
-        {
-            "id": 158,
-            "make": "VINTAGE ROVER",
-            "models": [
-                {
-                    "id": 1285,
-                    "model": "LRD110-R"
-                },
-                {
-                    "id": 1286,
-                    "model": "LRD90-R"
-                }
-            ]
-        },
-        {
-            "id": 84,
-            "make": "VISION INDUSTRIES",
-            "models": [
-                {
-                    "id": 405,
-                    "model": "SZR"
                 }
             ]
         },
@@ -5465,40 +5137,6 @@
             ]
         },
         {
-            "id": 93,
-            "make": "YESTER YEAR AUTO",
-            "models": [
-                {
-                    "id": 445,
-                    "model": "Bucket"
-                },
-                {
-                    "id": 441,
-                    "model": "Cabriolet"
-                },
-                {
-                    "id": 444,
-                    "model": "Club Pickup"
-                },
-                {
-                    "id": 439,
-                    "model": "Cobra"
-                },
-                {
-                    "id": 443,
-                    "model": "Delivery"
-                },
-                {
-                    "id": 438,
-                    "model": "Vicky"
-                },
-                {
-                    "id": 440,
-                    "model": "Willys"
-                }
-            ]
-        },
-        {
             "id": 110,
             "make": "YUGO",
             "models": [
@@ -5517,16 +5155,6 @@
                 {
                     "id": 455,
                     "model": "Yugo 65"
-                }
-            ]
-        },
-        {
-            "id": 173,
-            "make": "ZOOX",
-            "models": [
-                {
-                    "id": 1293,
-                    "model": "Zoox Sedan"
                 }
             ]
         }
