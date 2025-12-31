@@ -31,12 +31,6 @@
       }
     },
     {
-      "id": 168,
-      "attributes": {
-        "make": "AUTOMOBILI PININFARINA"
-      }
-    },
-    {
       "id": 199,
       "attributes": {
         "make": "AUTOZAM"
@@ -103,24 +97,6 @@
       }
     },
     {
-      "id": 165,
-      "attributes": {
-        "make": "CRUISE"
-      }
-    },
-    {
-      "id": 151,
-      "attributes": {
-        "make": "CX AUTOMOTIVE"
-      }
-    },
-    {
-      "id": 161,
-      "attributes": {
-        "make": "CZINGER"
-      }
-    },
-    {
       "id": 59,
       "attributes": {
         "make": "DAEWOO"
@@ -145,12 +121,6 @@
       }
     },
     {
-      "id": 163,
-      "attributes": {
-        "make": "DONGFENG"
-      }
-    },
-    {
       "id": 79,
       "attributes": {
         "make": "EAGLE"
@@ -160,12 +130,6 @@
       "id": 65,
       "attributes": {
         "make": "EQUUS AUTOMOTIVE"
-      }
-    },
-    {
-      "id": 55,
-      "attributes": {
-        "make": "FALCON"
       }
     },
     {
@@ -253,12 +217,6 @@
       }
     },
     {
-      "id": 196,
-      "attributes": {
-        "make": "ISO"
-      }
-    },
-    {
       "id": 44,
       "attributes": {
         "make": "ISUZU"
@@ -292,12 +250,6 @@
       "id": 103,
       "attributes": {
         "make": "KARMA"
-      }
-    },
-    {
-      "id": 75,
-      "attributes": {
-        "make": "KEPLER MOTORS"
       }
     },
     {
@@ -409,12 +361,6 @@
       }
     },
     {
-      "id": 193,
-      "attributes": {
-        "make": "MESSERSCHMITT"
-      }
-    },
-    {
       "id": 181,
       "attributes": {
         "make": "MG"
@@ -487,12 +433,6 @@
       }
     },
     {
-      "id": 136,
-      "attributes": {
-        "make": "PAS"
-      }
-    },
-    {
       "id": 111,
       "attributes": {
         "make": "PEUGEOT"
@@ -526,30 +466,6 @@
       "id": 49,
       "attributes": {
         "make": "PORSCHE"
-      }
-    },
-    {
-      "id": 187,
-      "attributes": {
-        "make": "QVALE"
-      }
-    },
-    {
-      "id": 191,
-      "attributes": {
-        "make": "RED BULL"
-      }
-    },
-    {
-      "id": 364,
-      "attributes": {
-        "make": "REINDEER"
-      }
-    },
-    {
-      "id": 125,
-      "attributes": {
-        "make": "RENAISSANCE"
       }
     },
     {
@@ -595,12 +511,6 @@
       }
     },
     {
-      "id": 180,
-      "attributes": {
-        "make": "Santa's"
-      }
-    },
-    {
       "id": 58,
       "attributes": {
         "make": "SATURN"
@@ -610,18 +520,6 @@
       "id": 198,
       "attributes": {
         "make": "SCION"
-      }
-    },
-    {
-      "id": 155,
-      "attributes": {
-        "make": "SCUDERIA CAMERON GLICKENHAUS (SCG)"
-      }
-    },
-    {
-      "id": 154,
-      "attributes": {
-        "make": "SF MOTORS INC."
       }
     },
     {
@@ -691,33 +589,9 @@
       }
     },
     {
-      "id": 121,
-      "attributes": {
-        "make": "UCC"
-      }
-    },
-    {
-      "id": 188,
-      "attributes": {
-        "make": "ULTIMA"
-      }
-    },
-    {
       "id": 195,
       "attributes": {
         "make": "VECTOR"
-      }
-    },
-    {
-      "id": 158,
-      "attributes": {
-        "make": "VINTAGE ROVER"
-      }
-    },
-    {
-      "id": 84,
-      "attributes": {
-        "make": "VISION INDUSTRIES"
       }
     },
     {
@@ -745,21 +619,9 @@
       }
     },
     {
-      "id": 93,
-      "attributes": {
-        "make": "YESTER YEAR AUTO"
-      }
-    },
-    {
       "id": 110,
       "attributes": {
         "make": "YUGO"
-      }
-    },
-    {
-      "id": 173,
-      "attributes": {
-        "make": "ZOOX"
       }
     }
   ],
