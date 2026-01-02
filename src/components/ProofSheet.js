@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { useAuth } from '../contexts/AuthContext';
 import ImageDisplay from './ImageDisplay';
+import Login from './Login';
 
 const ProofSheet = () => {
+    const { isAdmin, loading: authLoading } = useAuth();
+
+    // All puzzles
     const [puzzles, setPuzzles] = useState([]);
     const [makes, setMakes] = useState([]);
     const [models, setModels] = useState([]);
 
     // Auth / Editing State
-    // Ideally we check if user is admin, but for now we assume this page is protected or internal tool
     const [isEditing, setIsEditing] = useState(null); // ID of car being edited
     const [showAddForm, setShowAddForm] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -219,11 +223,30 @@ const ProofSheet = () => {
         setIsEditing(null);
     };
 
+    if (authLoading) return <div style={styles.container}>Checking access...</div>;
+
+    if (!isAdmin) {
+        return (
+            <div style={styles.container}>
+                <header style={styles.header}>
+                    <h1>Restricted Area</h1>
+                </header>
+                <div style={{ textAlign: 'center', marginTop: '50px' }}>
+                    <p>You must be an administrator to view this page.</p>
+                    <div style={{ display: 'inline-block', marginTop: '20px' }}>
+                        <Login />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div style={styles.container}>
             <header style={styles.header}>
-                <h1>Proof Sheet <span style={styles.badge}>SUPABASE CONNECTED</span></h1>
+                <h1>Proof Sheet <span style={styles.badge}>ADMIN MODE</span></h1>
                 <p>Reviewing {puzzles.length} configured cars</p>
+                <div style={{ marginTop: '10px' }}><Login /></div>
                 {isLoading && <p>Loading data...</p>}
             </header>
 
@@ -405,6 +428,8 @@ const styles = {
     badge: {
         fontSize: '0.8rem',
         backgroundColor: '#e94560',
+        color: 'white',
+        WebkitTextFillColor: 'white', // Override parent h1 transparent fill
         padding: '2px 8px',
         borderRadius: '12px',
         verticalAlign: 'middle',

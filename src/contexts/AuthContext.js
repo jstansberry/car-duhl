@@ -1,0 +1,164 @@
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { supabase } from '../lib/supabaseClient';
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [session, setSession] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let mounted = true;
+
+        const initAuth = async () => {
+            try {
+                // FORCE TIMEOUT: If Supabase doesn't respond in 2.5s, force load the app.
+                // This prevents hanging on the "Initializing App" screen.
+                const timeoutPromise = new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({ data: { session: null }, error: new Error("Timeout") });
+                    }, 2500);
+                });
+
+                const sessionPromise = supabase.auth.getSession();
+
+                // Race the real call against the timeout
+                const { data: { session }, error } = await Promise.race([sessionPromise, timeoutPromise]);
+
+                if (error && error.message !== "Timeout") throw error;
+
+                if (mounted) {
+                    if (session) {
+                        setSession(session);
+                        setUser(session?.user ?? null);
+                        if (session?.user) {
+                            // Non-blocking admin check
+                            checkAdmin(session.user.id);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Auth initialization error:", error);
+            } finally {
+                if (mounted) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        initAuth();
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+            if (mounted) {
+                setSession(session);
+                setUser(session?.user ?? null);
+
+                if (session?.user) {
+                    checkAdmin(session.user.id);
+                } else {
+                    setIsAdmin(false);
+                }
+
+                setLoading(false);
+            }
+        });
+
+        return () => {
+            mounted = false;
+            subscription.unsubscribe();
+        };
+    }, []);
+
+    const checkAdmin = async (userId) => {
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('is_admin')
+                .eq('id', userId)
+                .single();
+
+            if (data && data.is_admin) {
+                setIsAdmin(true);
+            } else {
+                setIsAdmin(false);
+            }
+        } catch (error) {
+            console.error('Error checking admin status:', error);
+            setIsAdmin(false);
+        }
+    };
+
+    const loginWithGoogle = async () => {
+        try {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.origin,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent'
+                    }
+                }
+            });
+            if (error) throw error;
+        } catch (error) {
+            console.error("Login Error:", error);
+            alert("Login failed");
+        }
+    };
+
+    const logout = async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+
+        // Clear all local storage (game state, etc)
+        localStorage.clear();
+
+        // Force refresh to reset React state completely
+        window.location.reload();
+    };
+
+    const value = {
+        user,
+        session,
+        isAdmin,
+        loginWithGoogle,
+        logout,
+        loading
+    };
+
+    return (
+        <AuthContext.Provider value={value}>
+            {loading ? (
+                <div style={styles.loadingContainer}>
+                    <h3>App Loading...</h3>
+                    <p style={styles.loadingText}>Connecting to game server...</p>
+                </div>
+            ) : children}
+        </AuthContext.Provider>
+    );
+};
+
+const styles = {
+    loadingContainer: {
+        color: '#fff',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: '#1a1a2e',
+        fontFamily: 'Arial, sans-serif',
+        flexDirection: 'column'
+    },
+    loadingText: {
+        color: '#888',
+        fontSize: '0.8rem',
+        marginTop: '10px'
+    }
+};
+
+export const useAuth = () => {
+    return useContext(AuthContext);
+};

@@ -96,23 +96,18 @@ const GuessForm = ({ onGuess, gameState, onViewResults }) => {
                     ))}
                 </select>
 
-                <input
-                    type="number"
-                    placeholder="Year"
+                <select
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     disabled={gameState !== 'playing'}
-                    style={{
-                        ...styles.input,
-                        width: '70px',
-                        flex: 'none',
-                        MozAppearance: 'textfield', // Firefox
-                    }}
-                    className="no-spinner"
-                    min="1900"
-                    max={new Date().getFullYear() + 1}
+                    style={{ ...styles.input, flex: '0 1 100px' }}
                     required
-                />
+                >
+                    <option value="">Year</option>
+                    {Array.from({ length: new Date().getFullYear() - 1949 }, (_, i) => new Date().getFullYear() - i).map(y => (
+                        <option key={y} value={y}>{y}</option>
+                    ))}
+                </select>
             </div>
             <button
                 type={gameState === 'playing' ? "submit" : "button"}

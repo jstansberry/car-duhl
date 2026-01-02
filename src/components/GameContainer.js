@@ -3,6 +3,7 @@ import ImageDisplay from './ImageDisplay';
 import GuessForm from './GuessForm';
 import GuessHistory from './GuessHistory';
 import GameOverModal from './GameOverModal';
+import Login from './Login';
 import { supabase } from '../lib/supabaseClient';
 
 const GameContainer = () => {
@@ -15,6 +16,8 @@ const GameContainer = () => {
     const [guesses, setGuesses] = useState([]);
     const [gameState, setGameState] = useState('playing');
     const [showModal, setShowModal] = useState(false);
+
+    // ... existing logic ...
 
     // Fetch Daily Car
     useEffect(() => {
@@ -82,8 +85,8 @@ const GameContainer = () => {
         }));
     }, [guesses, gameState, dailyCar]);
 
-    if (loading) return <div style={styles.loading}>Loading...</div>;
-    if (!dailyCar) return <div style={styles.error}>No game found for today.</div>;
+    if (loading) return <div style={styles.loading}>Loading Daily Car...</div>;
+    if (!dailyCar) return <div style={styles.error}>No car scheduled for today ({today}). check back later!</div>;
 
     const handleGuess = (guess) => {
         if (gameState !== 'playing') return;
@@ -130,8 +133,11 @@ const GameContainer = () => {
     return (
         <div style={styles.container}>
             <header style={styles.header}>
-                <h1>CAR-DUHL</h1>
-                <p>Guess the car in 5 or fewer attempts!</p>
+                <div style={styles.headerLeft}>
+                    <h1 style={styles.title}>CAR-DUHL</h1>
+                    <p style={styles.subtitle}>Guess the car in 5 or fewer attempts!</p>
+                </div>
+                <Login />
             </header>
 
             <ImageDisplay
@@ -167,13 +173,36 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '20px',
-        maxWidth: '600px',
+        maxWidth: '500px',
         margin: '0 auto',
+        padding: '20px',
+        textAlign: 'center',
+        color: '#fff',
+        fontFamily: 'Arial, sans-serif'
     },
     header: {
-        textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         marginBottom: '20px',
+        width: '100%',
+        textAlign: 'left'
+    },
+    headerLeft: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    title: {
+        margin: 0,
+        fontSize: '2rem',
+        color: '#e94560',
+        fontWeight: 'bold',
+        letterSpacing: '1px'
+    },
+    subtitle: {
+        margin: '5px 0 0 0',
+        fontSize: '0.9rem',
+        color: '#ccc'
     },
     loading: {
         color: 'white',
