@@ -4,15 +4,31 @@ import GameContainer from './components/GameContainer';
 import ProofSheet from './components/ProofSheet';
 
 function App() {
-    const path = window.location.pathname;
+    const [path, setPath] = React.useState(window.location.pathname);
 
+    React.useEffect(() => {
+        const handlePopState = () => {
+            setPath(window.location.pathname);
+        };
+
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, []);
+
+    // Also listen for a custom pushState event if we want to change routes programmatically
+    // or just check path.
+
+    // Simple Router
+    let component;
     if (path === '/proof-sheet') {
-        return <ProofSheet />;
+        component = <ProofSheet />;
+    } else {
+        component = <GameContainer />;
     }
 
     return (
         <div className="App">
-            <GameContainer />
+            {component}
         </div>
     );
 }
