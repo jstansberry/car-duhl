@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ImageDisplay from './ImageDisplay';
 import GuessForm from './GuessForm';
 import GuessHistory from './GuessHistory';
 import GameOverModal from './GameOverModal';
 import Login from './Login';
+import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabaseClient';
 
 const GameContainer = () => {
@@ -16,6 +17,9 @@ const GameContainer = () => {
     const [guesses, setGuesses] = useState([]);
     const [gameState, setGameState] = useState('playing');
     const [showModal, setShowModal] = useState(false);
+    const [userScore, setUserScore] = useState(0);
+    const { user } = useAuth();
+    const prevUserIdRef = useRef(user ? user.id : 'anon');
 
     // ... existing logic ...
 
@@ -54,7 +58,8 @@ const GameContainer = () => {
                     setDailyCar(carData);
 
                     // Initialize state from local storage AFTER we have the car date/id
-                    const storageKey = `cardle_state_${carData.date}`;
+                    const userId = user ? user.id : 'anon';
+                    const storageKey = `cardle_state_${carData.date}_${userId}`;
                     const saved = localStorage.getItem(storageKey);
                     if (saved) {
                         const parsed = JSON.parse(saved);
@@ -63,6 +68,11 @@ const GameContainer = () => {
                         if (parsed.gameState === 'won' || parsed.gameState === 'lost') {
                             setShowModal(true);
                         }
+                    } else {
+                        // Reset if no saved state for this user (e.g. switching from anon to user)
+                        setGuesses([]);
+                        setGameState('playing');
+                        setShowModal(false);
                     }
                 }
             } catch (err) {
@@ -73,20 +83,107 @@ const GameContainer = () => {
         };
 
         fetchDailyCar();
-    }, [today]);
+    }, [today, user]);
+
+    // Check for existing score (Replay Prevention)
+    useEffect(() => {
+        const checkUserScore = async () => {
+            if (!user || !dailyCar) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('user_scores')
+                    .select('score')
+                    .eq('user_id', user.id)
+                    .eq('daily_game_id', dailyCar.id)
+                    .single();
+
+                if (data) {
+                    // User already played
+                    setUserScore(data.score);
+                    setGameState('won'); // Reveal image
+                    setShowModal(true); // Show results immediately
+                    setGuesses([]); // Clear guesses as per requirement
+                }
+            } catch (err) {
+                console.error("Error checking score:", err);
+            }
+        };
+
+        checkUserScore();
+    }, [user, dailyCar]);
 
     // Save state
     useEffect(() => {
         if (!dailyCar) return;
-        const storageKey = `cardle_state_${dailyCar.date}`;
+
+        const currentUserId = user ? user.id : 'anon';
+
+        // If user changed, don't save (prevent overwriting new user's state with old user's data)
+        if (prevUserIdRef.current !== currentUserId) {
+            prevUserIdRef.current = currentUserId;
+            return;
+        }
+
+        const storageKey = `cardle_state_${dailyCar.date}_${currentUserId}`;
         localStorage.setItem(storageKey, JSON.stringify({
             guesses,
             gameState
         }));
-    }, [guesses, gameState, dailyCar]);
+    }, [guesses, gameState, dailyCar, user]);
 
     if (loading) return <div style={styles.loading}>Loading Daily Car...</div>;
     if (!dailyCar) return <div style={styles.error}>No car scheduled for today ({today}). check back later!</div>;
+
+    const calculateScore = (finalGuesses) => {
+        // Perfect First Try (All 3 correct on first guess)
+        if (finalGuesses.length > 0) {
+            const first = finalGuesses[0];
+            if (first.isMakeCorrect && first.isModelCorrect && first.isYearCorrect) {
+                return 100;
+            }
+        }
+
+        let score = 0;
+        const found = { make: false, model: false, year: false };
+        const pointsMap = [25, 20, 15, 10, 5];
+
+        finalGuesses.forEach((g, index) => {
+            if (index > 4) return; // Max 5 attempts for points
+            const pts = pointsMap[index];
+
+            if (!found.make && g.isMakeCorrect) {
+                score += pts;
+                found.make = true;
+            }
+            if (!found.model && g.isModelCorrect) {
+                score += pts;
+                found.model = true;
+            }
+            if (!found.year && g.isYearCorrect) {
+                score += pts;
+                found.year = true;
+            }
+        });
+
+        return score;
+    };
+
+    const saveScore = async (score) => {
+        if (!user || !dailyCar) return;
+
+        try {
+            await supabase
+                .from('user_scores')
+                .insert({
+                    user_id: user.id,
+                    daily_game_id: dailyCar.id,
+                    score: score
+                });
+        } catch (err) {
+            console.error("Error saving score:", err);
+        }
+    };
 
     const handleGuess = (guess) => {
         if (gameState !== 'playing') return;
@@ -121,11 +218,17 @@ const GameContainer = () => {
         // Check Win
         if (isMakeCorrect && isModelCorrect && isYearCorrect) {
             setGameState('won');
+            const finalScore = calculateScore(newGuesses);
+            setUserScore(finalScore);
+            saveScore(finalScore);
             setTimeout(() => setShowModal(true), 2500);
         }
         // Check Loss
         else if (newGuesses.length >= 5) {
             setGameState('lost');
+            const finalScore = calculateScore(newGuesses);
+            setUserScore(finalScore);
+            saveScore(finalScore);
             setTimeout(() => setShowModal(true), 2500);
         }
     };
@@ -161,6 +264,7 @@ const GameContainer = () => {
                     dailyCar={dailyCar}
                     guesses={guesses}
                     gameState={gameState}
+                    score={userScore}
                     onClose={() => setShowModal(false)}
                 />
             )}

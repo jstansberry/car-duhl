@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const GameOverModal = ({ dailyCar, guesses, gameState, onClose }) => {
+const GameOverModal = ({ dailyCar, guesses, gameState, score, onClose }) => {
     const [copied, setCopied] = useState(false);
 
     if (gameState === 'playing') return null;
@@ -9,7 +9,9 @@ const GameOverModal = ({ dailyCar, guesses, gameState, onClose }) => {
         const date = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
         const status = gameState === 'won' ? `${guesses.length}/5` : 'X/5';
 
-        let text = `Car-duhl ${date} ${status}\n\n`;
+        let text = `Car-duhl ${date} ${status}\n`;
+        if (score !== undefined) text += `Score: ${score}\n`;
+        text += '\n';
 
         guesses.forEach((guess, index) => {
             const makeIcon = guess.isMakeCorrect ? '🟢' : '🔴';
@@ -58,7 +60,8 @@ const GameOverModal = ({ dailyCar, guesses, gameState, onClose }) => {
                 </div>
 
                 <div style={styles.stats}>
-                    <p>Attempts: {guesses.length}/5</p>
+                    <div style={styles.score}>Score: {score}</div>
+                    {guesses.length > 0 && <p>Attempts: {guesses.length}/5</p>}
                 </div>
 
                 <button
@@ -71,22 +74,30 @@ const GameOverModal = ({ dailyCar, guesses, gameState, onClose }) => {
                     {copied ? 'COPIED TO CLIPBOARD!' : 'SHARE RESULT'}
                 </button>
 
-                <div style={styles.resultPreview}>
-                    <h4>Result Summary:</h4>
-                    {guesses.map((guess, idx) => (
-                        <div key={idx} style={styles.previewLine}>
-                            <span style={styles.previewNumber}>{idx + 1}.</span>
-                            <span style={styles.previewIcons}>
-                                {guess.isMakeCorrect ? '🟢' : '🔴'}
-                                {guess.isModelCorrect ? '🟢' : '🔴'}
-                                {guess.isYearCorrect ? '🟢' : '🔴'}
-                            </span>
-                            <span style={styles.previewText}>
-                                {guess.make} {guess.model} {guess.year}
-                            </span>
-                        </div>
-                    ))}
-                </div>
+                {guesses.length > 0 ? (
+                    <div style={styles.resultPreview}>
+                        <h4>Result Summary:</h4>
+                        {guesses.map((guess, idx) => (
+                            <div key={idx} style={styles.previewLine}>
+                                <span style={styles.previewNumber}>{idx + 1}.</span>
+                                <span style={styles.previewIcons}>
+                                    {guess.isMakeCorrect ? '🟢' : '🔴'}
+                                    {guess.isModelCorrect ? '🟢' : '🔴'}
+                                    {guess.isYearCorrect ? '🟢' : '🔴'}
+                                </span>
+                                <span style={styles.previewText}>
+                                    {guess.make} {guess.model} {guess.year}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div style={styles.resultPreview}>
+                        <p style={{ margin: 0, color: '#ccc' }}>
+                            You have already completed the daily challenge!
+                        </p>
+                    </div>
+                )}
 
                 <button onClick={onClose} style={styles.closeButton}>
                     Close
@@ -158,6 +169,13 @@ const styles = {
     stats: {
         marginBottom: '10px',
         color: '#ccc',
+    },
+    score: {
+        fontSize: '2.5rem',
+        fontWeight: 'bold',
+        color: '#a3f7bf',
+        marginBottom: '5px',
+        textShadow: '0 0 10px rgba(163, 247, 191, 0.3)'
     },
     shareButton: {
         width: '100%',

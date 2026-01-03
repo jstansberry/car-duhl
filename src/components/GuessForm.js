@@ -119,7 +119,9 @@ const GuessForm = ({ onGuess, gameState, onViewResults }) => {
             >
                 {gameState === 'playing' ? 'GUESS' : 'VIEW RESULTS'}
             </button>
-        </form>
+
+            <div style={styles.hint}>year +/- 2</div>
+        </form >
     );
 };
 
@@ -156,6 +158,11 @@ const styles = {
         fontSize: '16px',
         fontWeight: 'bold',
         width: '50%', // Reduced width
+    },
+    hint: {
+        color: '#fff',
+        fontSize: '0.9rem',
+        marginTop: '5px'
     }
 };
 
