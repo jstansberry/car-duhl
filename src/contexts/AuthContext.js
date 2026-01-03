@@ -6,7 +6,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [session, setSession] = useState(null);
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -34,8 +34,8 @@ export const AuthProvider = ({ children }) => {
                         setSession(session);
                         setUser(session?.user ?? null);
                         if (session?.user) {
-                            // Non-blocking admin check
-                            checkAdmin(session.user.id);
+                            // Non-blocking profile fetch
+                            fetchProfile(session.user.id);
                         }
                     }
                 }
@@ -56,9 +56,9 @@ export const AuthProvider = ({ children }) => {
                 setUser(session?.user ?? null);
 
                 if (session?.user) {
-                    checkAdmin(session.user.id);
+                    fetchProfile(session.user.id);
                 } else {
-                    setIsAdmin(false);
+                    setProfile(null);
                 }
 
                 setLoading(false);
@@ -71,22 +71,19 @@ export const AuthProvider = ({ children }) => {
         };
     }, []);
 
-    const checkAdmin = async (userId) => {
+    const fetchProfile = async (userId) => {
         try {
             const { data, error } = await supabase
                 .from('profiles')
-                .select('is_admin')
+                .select('*')
                 .eq('id', userId)
                 .single();
 
-            if (data && data.is_admin) {
-                setIsAdmin(true);
-            } else {
-                setIsAdmin(false);
+            if (data) {
+                setProfile(data);
             }
         } catch (error) {
-            console.error('Error checking admin status:', error);
-            setIsAdmin(false);
+            console.error('Error fetching profile:', error);
         }
     };
 
@@ -125,7 +122,8 @@ export const AuthProvider = ({ children }) => {
     const value = {
         user,
         session,
-        isAdmin,
+        profile,
+        isAdmin: profile?.is_admin || false,
         loginWithGoogle,
         logout,
         loading

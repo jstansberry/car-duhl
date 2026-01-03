@@ -69,12 +69,12 @@ const GuessForm = ({ onGuess, gameState, onViewResults }) => {
 
     return (
         <form onSubmit={handleSubmit} style={styles.form}>
-            <div style={styles.row}>
+            <div className="guess-form-row">
                 <select
                     value={selectedMake}
                     onChange={(e) => setSelectedMake(e.target.value)}
                     disabled={gameState !== 'playing'}
-                    style={{ ...styles.input, flex: '0 1 120px' }}
+                    className="guess-input guess-input-make"
                     required
                 >
                     <option value="">Select Make</option>
@@ -87,7 +87,7 @@ const GuessForm = ({ onGuess, gameState, onViewResults }) => {
                     value={selectedModel}
                     onChange={(e) => setSelectedModel(e.target.value)}
                     disabled={!selectedMake || gameState !== 'playing'}
-                    style={{ ...styles.input, flex: 2 }}
+                    className="guess-input guess-input-model"
                     required
                 >
                     <option value="">Select Model</option>
@@ -100,7 +100,7 @@ const GuessForm = ({ onGuess, gameState, onViewResults }) => {
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     disabled={gameState !== 'playing'}
-                    style={{ ...styles.input, flex: '0 1 100px' }}
+                    className="guess-input guess-input-year"
                     required
                 >
                     <option value="">Year</option>

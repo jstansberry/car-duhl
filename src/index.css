@@ -135,3 +135,49 @@ input[type=number] {
     opacity: 1;
   }
 }
+/* Guess Form Responsiveness */
+.guess-form-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+.guess-input {
+  box-sizing: border-box;
+  padding: 10px; /* Reduced specific padding slightly */
+  border-radius: 8px;
+  font-size: 16px; /* Prevents iOS zoom */
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05); /* Fallback */
+  color: var(--text-color);
+}
+
+.guess-input-make {
+  flex: 1 1 110px; /* Reduced basis */
+  min-width: 0; /* Allow shrink */
+}
+
+.guess-input-model {
+  flex: 2 1 140px; /* Reduced basis */
+  min-width: 0;
+}
+
+.guess-input-year {
+  flex: 0 1 90px; /* Reduced basis */
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .guess-form-row {
+    gap: 12px;
+  }
+  
+  .guess-input-make,
+  .guess-input-model,
+  .guess-input-year {
+    flex: 1 1 100%; /* Stack fully on mobile */
+  }
+}

@@ -25,6 +25,7 @@ const ProofSheet = () => {
         year: '',
         imageUrl: '',
         gameOverImageURL: '',
+        source: '',
         transformOrigin: 'center center',
         maxZoom: 5
     });
@@ -89,6 +90,7 @@ const ProofSheet = () => {
                 model_id: d.model_id,
                 imageUrl: d.image_url,
                 gameOverImageURL: d.game_over_image_url || '',
+                source: d.source || '',
                 transformOrigin: d.transform_origin,
                 maxZoom: d.max_zoom
             }));
@@ -142,6 +144,7 @@ const ProofSheet = () => {
                 model_id: parseInt(formData.model_id),
                 image_url: formData.imageUrl,
                 game_over_image_url: formData.gameOverImageURL || null,
+                source: formData.source || null,
                 transform_origin: formData.transformOrigin,
                 max_zoom: parseFloat(formData.maxZoom)
             };
@@ -203,6 +206,7 @@ const ProofSheet = () => {
             model_id: car.model_id,
             imageUrl: car.imageUrl,
             gameOverImageURL: car.gameOverImageURL,
+            source: car.source,
             transformOrigin: car.transformOrigin,
             maxZoom: car.maxZoom
         });
@@ -217,6 +221,7 @@ const ProofSheet = () => {
             year: '',
             imageUrl: '',
             gameOverImageURL: '',
+            source: '',
             transformOrigin: 'center center',
             maxZoom: 5
         });
@@ -312,6 +317,11 @@ const ProofSheet = () => {
                             <input type="url" value={formData.gameOverImageURL} onChange={e => setFormData({ ...formData, gameOverImageURL: e.target.value })} style={styles.crudInput} />
                         </div>
 
+                        <div style={styles.field}>
+                            <label style={styles.label}>Image Source / Credit URL:</label>
+                            <input type="url" value={formData.source} onChange={e => setFormData({ ...formData, source: e.target.value })} placeholder="https://..." style={styles.crudInput} />
+                        </div>
+
                         <div style={styles.formRow}>
                             <div style={styles.field}>
                                 <label style={styles.label}>Max Zoom (Guess #1): {formData.maxZoom}</label>
@@ -391,6 +401,14 @@ const ProofSheet = () => {
                             <a href={car.imageUrl} target="_blank" rel="noopener noreferrer" style={styles.link}>
                                 Source Image
                             </a>
+                            {car.source && (
+                                <>
+                                    {' | '}
+                                    <a href={car.source} target="_blank" rel="noopener noreferrer" style={styles.link}>
+                                        Credit
+                                    </a>
+                                </>
+                            )}
                             {car.gameOverImageURL && (
                                 <>
                                     {' | '}

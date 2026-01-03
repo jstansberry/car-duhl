@@ -49,6 +49,11 @@ const GameOverModal = ({ dailyCar, guesses, gameState, onClose }) => {
                     />
                     <div style={styles.carDetails}>
                         <h3>{dailyCar.year} {dailyCar.make} {dailyCar.model}</h3>
+                        {dailyCar.source && (
+                            <a href={dailyCar.source} target="_blank" rel="noopener noreferrer" style={styles.sourceLink}>
+                                Source credit
+                            </a>
+                        )}
                     </div>
                 </div>
 
@@ -106,7 +111,7 @@ const styles = {
         backdropFilter: 'blur(5px)',
     },
     modal: {
-        padding: '30px',
+        padding: '20px',
         maxWidth: '500px',
         width: '90%',
         maxHeight: '90vh',
@@ -121,28 +126,37 @@ const styles = {
     },
     title: {
         fontSize: '2rem',
-        marginBottom: '20px',
+        marginBottom: '10px',
         background: '-webkit-linear-gradient(45deg, #e94560, #a3f7bf)',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
     },
     carDisplay: {
         width: '100%',
-        marginBottom: '20px',
+        marginBottom: '10px',
     },
     image: {
         width: '100%',
         borderRadius: '8px',
-        marginBottom: '10px',
+        marginBottom: '5px',
         boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
     },
     carDetails: {
         fontSize: '1.5rem',
         fontWeight: 'bold',
         color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '5px',
+        alignItems: 'center'
+    },
+    sourceLink: {
+        fontSize: '0.8rem',
+        color: '#a3f7bf',
+        textDecoration: 'underline'
     },
     stats: {
-        marginBottom: '20px',
+        marginBottom: '10px',
         color: '#ccc',
     },
     shareButton: {
@@ -154,13 +168,13 @@ const styles = {
         fontSize: '1.1rem',
         fontWeight: 'bold',
         cursor: 'pointer',
-        marginBottom: '20px',
+        marginBottom: '10px',
         transition: 'background-color 0.3s',
     },
     resultPreview: {
         width: '100%',
         backgroundColor: 'rgba(0,0,0,0.2)',
-        padding: '15px',
+        padding: '10px',
         borderRadius: '8px',
         marginBottom: '5px',
         textAlign: 'left',
