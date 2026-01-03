@@ -96,6 +96,8 @@ export const AuthProvider = ({ children }) => {
                 provider: 'google',
                 options: {
                     redirectTo: window.location.origin,
+                    // DEBUG: Log the redirect URL
+                    debugRedirect: console.log("Logging in with Google, redirecting to:", window.location.origin),
                     queryParams: {
                         access_type: 'offline',
                         prompt: 'consent'

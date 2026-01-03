@@ -11,7 +11,7 @@ const ImageDisplay = ({ imageUrl, zoomLevel, gameStatus, transformOrigin, maxZoo
         // Start at 5x scale, or custom maxZoom
         // Decrease by ~20% for each incorrect guess (was 30%)
         const initialScale = maxZoom || 5;
-        const reductionFactor = 0.8;
+        const reductionFactor = 0.9;
         // zoomLevel starts at 1, so index is zoomLevel - 1
         let scale = initialScale * Math.pow(reductionFactor, zoomLevel - 1);
 
