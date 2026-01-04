@@ -36,7 +36,12 @@ CREATE POLICY "Users can manage their own progress"
 CREATE OR REPLACE VIEW weekly_leaderboard AS
 SELECT 
     us.user_id,
-    p.username,
+    -- Format Name: "Jeff Stansberry" -> "Jeff S."
+    CASE 
+        WHEN position(' ' in p.full_name) > 0 
+        THEN split_part(p.full_name, ' ', 1) || ' ' || left(split_part(p.full_name, ' ', 2), 1) || '.' 
+        ELSE COALESCE(p.full_name, p.username, 'Anonymous')
+    END as username,
     p.avatar_url,
     SUM(us.score) as total_score,
     COUNT(us.daily_game_id) as games_played,
@@ -46,5 +51,5 @@ JOIN profiles p ON us.user_id = p.id
 WHERE 
     -- Filter for current week (Week starts Monday)
     date_trunc('week', us.completed_at) = date_trunc('week', CURRENT_DATE)
-GROUP BY us.user_id, p.username, p.avatar_url
+GROUP BY us.user_id, p.full_name, p.username, p.avatar_url
 ORDER BY total_score DESC;
