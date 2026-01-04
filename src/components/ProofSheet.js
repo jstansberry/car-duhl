@@ -57,7 +57,7 @@ const ProofSheet = () => {
 
     // Memoize the distribution summary
     const distributionSummary = useMemo(() => {
-        const counts = puzzles.reduce((acc, car) => {
+        const counts = filteredPuzzles.reduce((acc, car) => {
             const key = `${car.year}|${car.make}|${car.model}`;
             acc[key] = (acc[key] || 0) + 1;
             return acc;
@@ -69,7 +69,7 @@ const ProofSheet = () => {
                 const [year, make, model] = key.split('|');
                 return { year, make, model, count };
             });
-    }, [puzzles]);
+    }, [filteredPuzzles]);
 
     useEffect(() => {
         fetchPuzzles();
@@ -270,7 +270,7 @@ const ProofSheet = () => {
         <div style={styles.container}>
             <header style={styles.header}>
                 <h1>Proof Sheet <span style={styles.badge}>ADMIN MODE</span></h1>
-                <p>Reviewing {puzzles.length} configured cars</p>
+
                 <div style={{ marginTop: '10px' }}><Login /></div>
                 {isLoading && <p>Loading data...</p>}
             </header>
@@ -373,45 +373,7 @@ const ProofSheet = () => {
                 </section>
             )}
 
-            <section style={styles.summarySection}>
-                <div
-                    onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
-                    style={{ ...styles.subTitle, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
-                >
-                    Car Distribution Summary
-                    <span style={{ fontSize: '0.8rem', color: '#a3f7bf' }}>
-                        {isSummaryExpanded ? '▼' : '▶'}
-                    </span>
-                </div>
 
-                {isSummaryExpanded && (
-                    <table style={styles.table}>
-                        <thead>
-                            <tr>
-                                <th style={styles.th}>Year</th>
-                                <th style={styles.th}>Make</th>
-                                <th style={styles.th}>Model</th>
-                                <th style={styles.th}>Count</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {distributionSummary.map((item, idx) => {
-                                const key = `${item.year}|${item.make}|${item.model}`;
-                                return (
-                                    <tr key={key} style={styles.tr}>
-                                        <td style={styles.td}>{item.year}</td>
-                                        <td style={styles.td}>{item.make}</td>
-                                        <td style={styles.td}>{item.model}</td>
-                                        <td style={{ ...styles.td, fontWeight: 'bold', color: item.count > 3 ? '#e94560' : '#ccc' }}>
-                                            {item.count}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                )}
-            </section>
 
 
 
@@ -448,6 +410,9 @@ const ProofSheet = () => {
                     >
                         Reset to Next 30 Days
                     </button>
+                    <span style={{ marginLeft: 'auto', color: '#a3f7bf', alignSelf: 'center', fontWeight: 'bold' }}>
+                        {filteredPuzzles.length} results
+                    </span>
                 </div>
             </section>
 
@@ -494,6 +459,46 @@ const ProofSheet = () => {
                     </div>
                 ))}
             </div>
+
+            <section style={styles.summarySection}>
+                <div
+                    onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
+                    style={{ ...styles.subTitle, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+                >
+                    Car Distribution Summary
+                    <span style={{ fontSize: '0.8rem', color: '#a3f7bf' }}>
+                        {isSummaryExpanded ? '▼' : '▶'}
+                    </span>
+                </div>
+
+                {isSummaryExpanded && (
+                    <table style={styles.table}>
+                        <thead>
+                            <tr>
+                                <th style={styles.th}>Year</th>
+                                <th style={styles.th}>Make</th>
+                                <th style={styles.th}>Model</th>
+                                <th style={styles.th}>Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {distributionSummary.map((item, idx) => {
+                                const key = `${item.year}|${item.make}|${item.model}`;
+                                return (
+                                    <tr key={key} style={styles.tr}>
+                                        <td style={styles.td}>{item.year}</td>
+                                        <td style={styles.td}>{item.make}</td>
+                                        <td style={styles.td}>{item.model}</td>
+                                        <td style={{ ...styles.td, fontWeight: 'bold', color: item.count > 3 ? '#e94560' : '#ccc' }}>
+                                            {item.count}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                )}
+            </section>
         </div >
     );
 };
@@ -604,7 +609,7 @@ const styles = {
         marginTop: '10px'
     },
     summarySection: {
-        marginBottom: '40px',
+        marginTop: '40px',
         backgroundColor: 'rgba(255, 255, 255, 0.05)',
         padding: '20px',
         borderRadius: '12px',

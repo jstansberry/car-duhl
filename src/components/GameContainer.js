@@ -61,19 +61,102 @@ const GameContainer = () => {
 
                     // Initialize state from local storage AFTER we have the car date/id
                     const userId = user ? user.id : 'anon';
+
+                    // 1. Check if User already finished (Priority: Server User Score)
+                    let completedScore = null;
+                    if (user) {
+                        const { data: scoreData } = await supabase
+                            .from('user_scores')
+                            .select('score')
+                            .eq('user_id', user.id)
+                            .eq('daily_game_id', carData.id)
+                            .single();
+
+                        if (scoreData) {
+                            completedScore = scoreData.score;
+                        }
+                    }
+
+                    // 2. Try to load from Server Progress (Anti-Cheat)
+                    let serverGuesses = null;
+                    if (user) {
+                        const { data: progressData } = await supabase
+                            .from('game_progress')
+                            .select('guesses')
+                            .eq('user_id', user.id)
+                            .eq('daily_game_id', carData.id)
+                            .single();
+
+                        if (progressData) {
+                            serverGuesses = progressData.guesses;
+                            // Fix for potentially reversed guesses in DB (Winning guess should be last)
+                            // If index 0 is a winner and there are multiple guesses, it's likely reversed [Newest, ..., Oldest]
+                            if (serverGuesses && serverGuesses.length > 1) {
+                                const first = serverGuesses[0];
+                                const isFirstWinner = first.isMakeCorrect && first.isModelCorrect && first.isYearCorrect;
+                                if (isFirstWinner) {
+                                    serverGuesses = [...serverGuesses].reverse();
+                                }
+                            }
+                        }
+                    }
+
+                    // 3. Try to load from LocalStorage
                     const storageKey = `cardle_state_${carData.date}_${userId}`;
                     const saved = localStorage.getItem(storageKey);
-                    if (saved) {
+
+                    // --- STATE RESTORATION LOGIC ---
+
+                    if (completedScore !== null) {
+                        // CASE A: Game is Completed
+                        setUserScore(completedScore);
+                        setGameState('won'); // Default to 'won' for reveal, modal will show score
+                        setShowModal(true);
+
+                        // Restore guesses history if available (Server > Local > Empty)
+                        if (serverGuesses && serverGuesses.length > 0) {
+                            setGuesses(serverGuesses);
+                        } else if (saved) {
+                            const parsed = JSON.parse(saved);
+                            setGuesses(parsed.guesses || []);
+                        } else {
+                            // If no history found, we still show the modal with the score
+                            setGuesses([]);
+                        }
+                    }
+                    else if (serverGuesses && serverGuesses.length > 0) {
+                        // CASE B: In Progress (Server)
+                        setGuesses(serverGuesses);
+
+                        // Check if already lost (5 attempts used) but score maybe failed to save?
+                        if (serverGuesses.length >= 5) {
+                            const score = calculateScore(serverGuesses);
+                            setUserScore(score);
+                            setGameState('lost');
+                            setShowModal(true);
+                        } else {
+                            setGameState('playing');
+                            setShowModal(false);
+                        }
+                    }
+                    else if (saved) {
+                        // CASE C: In Progress (Local)
                         const parsed = JSON.parse(saved);
                         setGuesses(parsed.guesses || []);
                         setGameState(parsed.gameState || 'playing');
+
                         if (parsed.gameState === 'won' || parsed.gameState === 'lost') {
+                            // Should have been caught by completedScore check if logged in,
+                            // but handles Anon completion or sync issues.
                             const recoveredScore = calculateScore(parsed.guesses || []);
                             setUserScore(recoveredScore);
                             setShowModal(true);
+                        } else {
+                            setShowModal(false);
                         }
-                    } else {
-                        // Reset if no saved state for this user (e.g. switching from anon to user)
+                    }
+                    else {
+                        // CASE D: New Game
                         setGuesses([]);
                         setGameState('playing');
                         setShowModal(false);
@@ -91,32 +174,7 @@ const GameContainer = () => {
         fetchDailyCar();
     }, [today, user]);
 
-    // Check for existing score (Replay Prevention)
-    useEffect(() => {
-        const checkUserScore = async () => {
-            if (!user || !dailyCar) return;
 
-            try {
-                const { data, error } = await supabase
-                    .from('user_scores')
-                    .select('score')
-                    .eq('user_id', user.id)
-                    .eq('daily_game_id', dailyCar.id)
-                    .single();
-
-                if (data) {
-                    // User already played
-                    setUserScore(data.score);
-                    setGameState('won'); // Reveal image
-                    setShowModal(true); // Show results immediately
-                }
-            } catch (err) {
-                console.error("Error checking score:", err);
-            }
-        };
-
-        checkUserScore();
-    }, [user, dailyCar]);
 
     // Save state
     useEffect(() => {
@@ -158,6 +216,22 @@ const GameContainer = () => {
         }
     };
 
+    const saveProgress = async (newGuesses) => {
+        if (!user || !dailyCar) return;
+
+        try {
+            await supabase
+                .from('game_progress')
+                .upsert({
+                    user_id: user.id,
+                    daily_game_id: dailyCar.id,
+                    guesses: newGuesses
+                }, { onConflict: 'user_id, daily_game_id' });
+        } catch (err) {
+            console.error("Error saving progress:", err);
+        }
+    };
+
     const handleGuess = (guess) => {
         if (gameState !== 'playing') return;
 
@@ -187,6 +261,7 @@ const GameContainer = () => {
 
         const newGuesses = [...guesses, newGuess];
         setGuesses(newGuesses);
+        saveProgress(newGuesses); // Sync to DB immediately (Anti-Cheat)
 
         // Check Win
         if (isMakeCorrect && isModelCorrect && isYearCorrect) {

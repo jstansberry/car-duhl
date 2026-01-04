@@ -3,6 +3,8 @@ import './index.css';
 import GameContainer from './components/GameContainer';
 import ProofSheet from './components/ProofSheet';
 
+import GrandPrixLeaderboard from './components/GrandPrixLeaderboard';
+
 function App() {
     const [path, setPath] = React.useState(window.location.pathname);
 
@@ -15,22 +17,49 @@ function App() {
         return () => window.removeEventListener('popstate', handlePopState);
     }, []);
 
-    // Also listen for a custom pushState event if we want to change routes programmatically
-    // or just check path.
-
     // Simple Router
-    let component;
     if (path === '/proof-sheet') {
-        component = <ProofSheet />;
-    } else {
-        component = <GameContainer />;
+        return (
+            <div className="App">
+                <ProofSheet />
+            </div>
+        );
     }
 
+    // Default Route (Game) - Includes Grand Prix Leaderboard
     return (
-        <div className="App">
-            {component}
+        <div className="App" style={styles.appContainer}>
+            <div style={styles.mainContent}>
+                <GameContainer />
+            </div>
+
+            <div style={styles.leaderboardContainer}>
+                <GrandPrixLeaderboard />
+            </div>
         </div>
     );
 }
+
+const styles = {
+    appContainer: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        gap: '40px',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '20px'
+    },
+    mainContent: {
+        flex: '1 1 500px', // Grow, shrink, basis
+        maxWidth: '600px',
+        minWidth: '300px'
+    },
+    leaderboardContainer: {
+        flex: '0 0 auto', // Don't grow/shrink indiscriminately
+        marginTop: '20px' // Space on mobile if wrapped
+    }
+};
 
 export default App;
