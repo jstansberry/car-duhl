@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import PastGamesModal from './PastGamesModal';
 
 const Login = () => {
     const { user, loginWithGoogle, logout, isAdmin, profile } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
+    const [showPastGames, setShowPastGames] = useState(false);
     const dropdownRef = useRef(null);
 
     // Close dropdown when clicking outside
@@ -61,16 +63,29 @@ const Login = () => {
 
                     <div style={styles.divider} />
 
+                    <button
+                        onClick={() => { setShowPastGames(true); setIsOpen(false); }}
+                        style={styles.menuItemButton}
+                    >
+                        My Past Games
+                    </button>
+
                     {isAdmin && (
-                        <a href="/proof-sheet" style={styles.menuItem}>
+                        <button
+                            onClick={() => window.location.href = '/proof-sheet'}
+                            style={styles.menuItemButton}
+                        >
                             Admin Dashboard
-                        </a>
+                        </button>
                     )}
 
                     <button onClick={logout} style={styles.menuItemButton}>
                         Sign Out
                     </button>
                 </div>
+            )}
+            {showPastGames && (
+                <PastGamesModal onClose={() => setShowPastGames(false)} />
             )}
         </div>
     );
@@ -151,15 +166,6 @@ const styles = {
         height: '1px',
         backgroundColor: '#444',
         margin: '5px 0'
-    },
-    menuItem: {
-        display: 'block',
-        padding: '10px 15px',
-        color: '#ccc',
-        textDecoration: 'none',
-        fontSize: '0.9rem',
-        cursor: 'pointer',
-        transition: 'background-color 0.2s'
     },
     menuItemButton: {
         display: 'block',
