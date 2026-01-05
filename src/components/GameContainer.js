@@ -52,8 +52,9 @@ const GameContainer = () => {
                         ...data,
                         make: data.make.name,
                         model: data.model.name,
-                        imageUrl: `${supabaseUrl}/functions/v1/serve-image?id=${data.id}&type=main`,
-                        gameOverImageURL: `${supabaseUrl}/functions/v1/serve-image?id=${data.id}&type=reveal`,
+                        // We use dynamic crop URLs now, so we don't need these static proxy URLs in the state
+                        // storing them for reference or fallback if needed, but primary logic will use ID
+                        id: data.id,
                         transformOrigin: data.transform_origin,
                         maxZoom: data.max_zoom
                     };
@@ -292,7 +293,7 @@ const GameContainer = () => {
             </header>
 
             <ImageDisplay
-                imageUrl={dailyCar.imageUrl}
+                imageUrl={`${supabaseUrl}/functions/v1/serve-crop?id=${dailyCar.id}&stage=${gameState === 'playing' ? guesses.length : 5}`}
                 zoomLevel={guesses.length}
                 gameStatus={gameState}
                 transformOrigin={dailyCar.transformOrigin}
@@ -309,7 +310,14 @@ const GameContainer = () => {
 
             {showModal && (
                 <GameOverModal
-                    dailyCar={dailyCar}
+                    dailyCar={{
+                        ...dailyCar,
+                        // Override static URLs with secure crop URLs for the modal
+                        imageUrl: `${supabaseUrl}/functions/v1/serve-crop?id=${dailyCar.id}&stage=5`,
+                        gameOverImageURL: dailyCar.game_over_image_url
+                            ? dailyCar.game_over_image_url
+                            : `${supabaseUrl}/functions/v1/serve-crop?id=${dailyCar.id}&stage=5`
+                    }}
                     guesses={guesses}
                     gameState={gameState}
                     score={userScore}

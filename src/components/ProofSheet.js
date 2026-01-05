@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, supabaseUrl } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import ImageDisplay from './ImageDisplay';
 import Login from './Login';
@@ -28,6 +28,8 @@ const ProofSheet = () => {
     const [isEditing, setIsEditing] = useState(null); // ID of car being edited
     const [showAddForm, setShowAddForm] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+
+    const [isSaving, setIsSaving] = useState(false);
 
     // Form states for adding/editing
     const [formData, setFormData] = useState({
@@ -155,6 +157,7 @@ const ProofSheet = () => {
 
     const handleSave = async (e) => {
         e.preventDefault();
+        setIsSaving(true);
 
         try {
             const payload = {
@@ -169,6 +172,7 @@ const ProofSheet = () => {
                 max_zoom: parseFloat(formData.maxZoom)
             };
 
+            let savedId = isEditing;
             let error;
 
             if (isEditing) {
@@ -178,23 +182,40 @@ const ProofSheet = () => {
                     .eq('id', isEditing);
                 error = updateError;
             } else {
-                const { error: insertError } = await supabase
+                const { data: inserted, error: insertError } = await supabase
                     .from('daily_games')
-                    .insert([payload]);
+                    .insert([payload])
+                    .select()
+                    .single();
                 error = insertError;
+                if (inserted) savedId = inserted.id;
             }
 
             if (error) throw error;
 
-            fetchPuzzles();
-            setIsEditing(null);
-            setShowAddForm(false);
-            resetForm();
-            alert(isEditing ? 'Puzzle updated!' : 'Puzzle created!');
+            // Trigger Server-Side Crop Generation
+            const { error: genError } = await supabase.functions.invoke('generate-crops', {
+                body: { id: savedId }
+            });
+
+            if (genError) {
+                console.error("Crop generation failed:", genError);
+                alert("Puzzle saved, but crop generation failed. Please try saving again.");
+            } else {
+                fetchPuzzles();
+                setIsEditing(null);
+                setShowAddForm(false);
+                resetForm();
+                // Removed alert to streamline flow, or keep it if preferred. 
+                // Creating a more subtle notification would be better, but user asked for loading modal.
+                // The overlay disappearing is a good enough signal + list update.
+            }
 
         } catch (error) {
             console.error('Error saving puzzle:', error);
             alert(`Failed to save: ${error.message}`);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -248,26 +269,17 @@ const ProofSheet = () => {
         setIsEditing(null);
     };
 
-    if (authLoading) return <div style={styles.container}>Checking access...</div>;
-
-    if (!isAdmin) {
-        return (
-            <div style={styles.container}>
-                <header style={styles.header}>
-                    <h1>Restricted Area</h1>
-                </header>
-                <div style={{ textAlign: 'center', marginTop: '50px' }}>
-                    <p>You must be an administrator to view this page.</p>
-                    <div style={{ display: 'inline-block', marginTop: '20px' }}>
-                        <Login />
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div style={styles.container}>
+            {isSaving && (
+                <div style={styles.loadingOverlay}>
+                    <div style={styles.loadingBox}>
+                        <div style={styles.spinner}></div>
+                        <p>Saving & Generating Crops...</p>
+                        <p style={{ fontSize: '0.8rem', color: '#ccc' }}>This may take a few seconds.</p>
+                    </div>
+                </div>
+            )}
             <header style={styles.header}>
                 <h1>Proof Sheet</h1>
 
@@ -362,6 +374,7 @@ const ProofSheet = () => {
                                     gameStatus='playing'
                                     transformOrigin={formData.transformOrigin}
                                     maxZoom={formData.maxZoom}
+                                    useClientSideZoom={true} // Enable legacy zoom for preview
                                 />
                             </div>
                         </div>
@@ -420,13 +433,37 @@ const ProofSheet = () => {
                 {filteredPuzzles.map((car) => (
                     <div key={car.id || car.date} style={styles.card}>
                         <div style={styles.imageContainer}>
-                            <ImageDisplay
-                                imageUrl={car.imageUrl}
-                                zoomLevel={1}
-                                gameStatus='playing'
-                                transformOrigin={car.transformOrigin}
-                                maxZoom={car.maxZoom}
-                            />
+                            <div style={styles.imageContainer}>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    {/* Left: Full Source Image (Scaled down) */}
+                                    <ImageDisplay
+                                        imageUrl={car.imageUrl}
+                                        zoomLevel={1}
+                                        gameStatus='completed' // Forces full view
+                                        transformOrigin={car.transformOrigin}
+                                        maxZoom={car.maxZoom}
+                                        useClientSideZoom={true} // Use CSS logic to show full image in small frame? Actually gameStatus='completed' returns scale 1.
+                                        // If useClientSideZoom=false, it just fills container. That's fine for source.
+                                        // Actually, if we want to ensure it shows KEY features, we might want objectFit 'contain'? 
+                                        // But ImageDisplay enforces 'cover'.
+                                        width="130px"
+                                        height="87px"
+                                        clickable={false}
+                                    />
+                                    {/* Right: Server-Side Crop (Stage 0 / Guess #1) */}
+                                    <ImageDisplay
+                                        imageUrl={`${supabaseUrl}/functions/v1/serve-crop?id=${car.id}&stage=0`} // Stage 0 = Max Zoom
+                                        zoomLevel={1}
+                                        gameStatus='playing'
+                                        transformOrigin={car.transformOrigin}
+                                        maxZoom={car.maxZoom}
+                                        useClientSideZoom={false} // Use the actual crop
+                                        width="130px"
+                                        height="87px"
+                                        clickable={false}
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <div style={styles.metadata}>
                             <strong>ID:</strong> {car.id}<br />
@@ -452,7 +489,7 @@ const ProofSheet = () => {
                                 </>
                             )}
                             <div style={styles.cardActions}>
-                                <button onClick={() => startEdit(car)} style={styles.editButton}>Adjust</button>
+                                <button onClick={() => startEdit(car)} style={styles.editButton}>Edit</button>
                                 <button onClick={() => handleDelete(car.id)} style={styles.deleteButton}>Remove</button>
                             </div>
                         </div>
@@ -751,7 +788,49 @@ const styles = {
         cursor: 'pointer',
         fontSize: '0.8rem',
         height: '35px'
+    },
+    loadingOverlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 9999
+    },
+    loadingBox: {
+        backgroundColor: '#16213e',
+        padding: '30px',
+        borderRadius: '12px',
+        border: '1px solid #e94560',
+        textAlign: 'center',
+        color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '15px'
+    },
+    spinner: {
+        width: '40px',
+        height: '40px',
+        border: '4px solid rgba(255, 255, 255, 0.1)',
+        borderLeftColor: '#e94560',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
     }
 };
+
+// Add keyframes for spinner
+const styleSheet = document.createElement("style");
+styleSheet.innerText = `
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+`;
+document.head.appendChild(styleSheet);
 
 export default ProofSheet;

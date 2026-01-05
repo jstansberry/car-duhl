@@ -39,13 +39,23 @@ serve(async (req) => {
 
         const { data, error } = await supabase
             .from('daily_games')
-            .select('image_url, game_over_image_url')
+            .select('image_url, game_over_image_url, date')
             .eq('id', gameId)
             .single();
 
         if (error || !data) {
             return new Response(JSON.stringify({ error: 'Game not found' }), {
                 status: 404,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+        }
+
+        // Time-Gating: Prevent access to future games
+        // Use New York time to match game logic
+        const nowNY = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+        if (data.date > nowNY) {
+            return new Response(JSON.stringify({ error: 'You cannot access future games' }), {
+                status: 403,
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             });
         }

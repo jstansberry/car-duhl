@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { useAuth } from '../contexts/AuthContext';
 
 const GrandPrixLeaderboard = () => {
+    const { user } = useAuth();
     const [leaders, setLeaders] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -66,6 +68,11 @@ const GrandPrixLeaderboard = () => {
             </div>
 
             <div style={styles.listContainer}>
+                {!user && (
+                    <div style={styles.loginPrompt}>
+                        Login to play!
+                    </div>
+                )}
                 {loading ? (
                     <div style={styles.loading}>Pit Stop...</div>
                 ) : leaders.length === 0 ? (
@@ -212,6 +219,16 @@ const styles = {
         fontWeight: 'bold',
         letterSpacing: '2px',
         borderTop: '1px solid #333'
+    },
+    loginPrompt: {
+        padding: '10px',
+        textAlign: 'center',
+        color: '#ffffff',
+        backgroundColor: '#2d1b2e', // Slight reddish tint background
+        borderBottom: '1px solid #333',
+        fontSize: '0.9rem',
+        fontWeight: 'bold',
+        animation: 'pulse 2s infinite'
     }
 };
 
