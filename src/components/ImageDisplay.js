@@ -1,42 +1,51 @@
 import React, { useState } from 'react';
 
-const ImageDisplay = ({ imageUrl, zoomLevel, gameStatus, transformOrigin, maxZoom }) => {
+const ImageDisplay = ({
+    imageUrl,
+    zoomLevel,
+    gameStatus,
+    transformOrigin,
+    maxZoom,
+    useClientSideZoom = false,
+    width = '300px',
+    height = '200px',
+    clickable = true
+}) => {
     const [isEnlarged, setIsEnlarged] = useState(false);
 
-    // Zoom levels: 1 (closest) to 5 (furthest/full image)
+    // Legacy Client-Side Zoom (for Admin ProofSheet preview)
     const getScale = () => {
-        // If we lost or won (game over), show full image
+        if (!useClientSideZoom) return 1;
         if (gameStatus !== 'playing') return 1;
 
         const guessCount = zoomLevel;
         let scale = maxZoom || 5;
-
-        // Progressive Zoom Logic:
-        // Start with 10% reduction, increase reduction by 2.5% each step
-        // e.g., 10%, 12.5%, 15%, 17.5%, 20%
-        let currentReduction = 0.90; // Factor for 10% reduction
-        const progression = 0.025;   // 2.5% change
+        let currentReduction = 0.90;
+        const progression = 0.025;
 
         for (let i = 0; i < guessCount; i++) {
             scale = scale * currentReduction;
-            currentReduction -= progression; // Decrease factor = Increase zoom-out
+            currentReduction -= progression;
         }
 
         return Math.max(scale, 1);
     };
 
+    const currentScale = getScale();
+
     const toggleEnlarge = () => {
+        if (!clickable) return;
         setIsEnlarged(!isEnlarged);
     };
-
-    const currentScale = getScale();
 
     return (
         <div style={styles.container}>
             <div
                 style={{
                     ...styles.imageWrapper,
-                    cursor: 'pointer',
+                    width: width,
+                    height: height,
+                    cursor: clickable ? 'pointer' : 'default',
                     transform: isEnlarged ? 'scale(1.5)' : 'scale(1)',
                     transition: 'transform 0.3s ease-in-out',
                     zIndex: isEnlarged ? 100 : 1
@@ -56,17 +65,26 @@ const ImageDisplay = ({ imageUrl, zoomLevel, gameStatus, transformOrigin, maxZoo
                         onContextMenu={(e) => e.preventDefault()}
                         style={{
                             ...styles.image,
-                            transform: `scale(${currentScale})`,
-                            // Use custom transform origin if provided, otherwise default to center
-                            transformOrigin: transformOrigin || 'center center',
-                            pointerEvents: 'none', // Allow clicks to pass through to wrapper, prevents dragging interaction
+                            width: '100%',
+                            height: '100%',
+                            // Conditional Styling:
+                            // If Server-Side (default): fit to container, no transform
+                            // If Client-Side (Admin): Apply scale & transformOrigin
+                            objectFit: 'cover',
+                            pointerEvents: 'none',
+                            ...(useClientSideZoom ? {
+                                transform: `scale(${currentScale})`,
+                                transformOrigin: transformOrigin || 'center center',
+                            } : {})
                         }}
                     />
                 </div>
             </div>
-            <div style={styles.hint}>
-                Click image to enlarge
-            </div>
+            {clickable && (
+                <div style={styles.hint}>
+                    Click image to enlarge
+                </div>
+            )}
         </div>
     );
 };
