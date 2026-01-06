@@ -57,55 +57,84 @@ const GrandPrixLeaderboard = () => {
     };
 
     return (
-        <div style={styles.towerContainer}>
-            <div style={styles.towerHeader}>
-                <div style={styles.flagIcon}>🏁</div>
-                <div style={styles.titleContainer}>
-                    <h3 style={styles.towerTitle}>GRAND PRIX</h3>
-                    <span style={styles.weekLabel}>WEEKLY STANDINGS</span>
-                    <span style={styles.weekLabel}>{getWeekRange()}</span>
+        <div style={styles.wrapper}>
+            <div style={styles.towerContainer}>
+                <div style={styles.towerHeader}>
+                    <div style={styles.flagIcon}>🏁</div>
+                    <div style={styles.titleContainer}>
+                        <div style={styles.titleRow}>
+                            <h3 style={styles.towerTitle}>GRAND PRIX</h3>
+                        </div>
+                        <span style={styles.weekLabel}>WEEKLY STANDINGS</span>
+                        <span style={styles.weekLabel}>{getWeekRange()}</span>
+                    </div>
+                </div>
+
+                <div style={styles.listContainer}>
+                    {!user && (
+                        <div style={styles.loginPrompt}>
+                            Login to play!
+                        </div>
+                    )}
+                    {loading ? (
+                        <div style={styles.loading}>Pit Stop...</div>
+                    ) : leaders.length === 0 ? (
+                        <div style={styles.empty}>No drivers yet!</div>
+                    ) : (
+                        leaders.map((driver, index) => {
+                            const isFirst = index === 0;
+                            return (
+                                <div
+                                    key={driver.user_id}
+                                    style={{
+                                        ...styles.driverRow,
+                                        ...(isFirst ? styles.firstPlaceRow : {})
+                                    }}
+                                >
+                                    <div style={{
+                                        ...styles.positionBox,
+                                        ...(isFirst ? styles.firstPlaceBox : {})
+                                    }}>
+                                        <span style={styles.position}>{index + 1}</span>
+                                    </div>
+                                    <div style={styles.driverInfo}>
+                                        <div style={styles.driverName}>
+                                            {driver.username || 'Anonymous'}
+                                        </div>
+                                        <div style={styles.driverStats}>
+                                            {driver.games_played} Races
+                                        </div>
+                                    </div>
+                                    <div style={{
+                                        ...styles.pointsBox,
+                                        ...(isFirst ? styles.firstPlacePoints : {})
+                                    }}>
+                                        {driver.total_score}
+                                    </div>
+                                </div>
+                            );
+                        })
+                    )}
+                </div>
+                <div style={styles.footer}>
+                    TOP 20
                 </div>
             </div>
 
-            <div style={styles.listContainer}>
-                {!user && (
-                    <div style={styles.loginPrompt}>
-                        Login to play!
-                    </div>
-                )}
-                {loading ? (
-                    <div style={styles.loading}>Pit Stop...</div>
-                ) : leaders.length === 0 ? (
-                    <div style={styles.empty}>No drivers yet!</div>
-                ) : (
-                    leaders.map((driver, index) => (
-                        <div key={driver.user_id} style={styles.driverRow}>
-                            <div style={styles.positionBox}>
-                                <span style={styles.position}>{index + 1}</span>
-                            </div>
-                            <div style={styles.driverInfo}>
-                                <div style={styles.driverName}>
-                                    {driver.username || 'Anonymous'}
-                                </div>
-                                <div style={styles.driverStats}>
-                                    {driver.games_played} Races
-                                </div>
-                            </div>
-                            <div style={styles.pointsBox}>
-                                {driver.total_score}
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
-            <div style={styles.footer}>
-                TOP 20
+            {/* Placeholder Ad Container */}
+            <div style={styles.adContainer}>
+                ADVERTISEMENT
             </div>
         </div>
     );
 };
 
 const styles = {
+    wrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px'
+    },
     towerContainer: {
         width: '280px',
         backgroundColor: '#111',
@@ -131,7 +160,13 @@ const styles = {
     },
     titleContainer: {
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        width: '100%'
+    },
+    titleRow: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
     },
     towerTitle: {
         margin: 0,
@@ -161,74 +196,96 @@ const styles = {
         transition: 'background 0.2s',
         cursor: 'default'
     },
+    firstPlaceRow: {
+        backgroundColor: '#2d0a10' // Dark red tint
+
+    },
     positionBox: {
-        width: '30px',
-        height: '30px',
+        width: '26px',
+        height: '26px',
         backgroundColor: '#333',
         color: '#fff',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: '4px',
-        marginRight: '10px',
+        borderRadius: '50%',
         fontWeight: 'bold',
-        fontSize: '1rem'
+        fontSize: '0.9rem',
+        marginRight: '10px'
+    },
+    firstPlaceBox: {
+        backgroundColor: '#ffd700', // Gold
+        color: '#000',
+        boxShadow: '0 0 10px rgba(255, 215, 0, 0.5)'
+    },
+    position: {
+        lineHeight: 1
     },
     driverInfo: {
-        flex: 1,
-        overflow: 'hidden'
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1
     },
     driverName: {
         color: '#fff',
         fontWeight: 'bold',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        fontSize: '1rem'
+        fontSize: '0.95rem'
     },
     driverStats: {
         color: '#888',
-        fontSize: '0.75rem',
-        textTransform: 'uppercase'
+        fontSize: '0.75rem'
     },
     pointsBox: {
-        backgroundColor: 'transparent',
-        color: '#a3f7bf', // Green for points
+        backgroundColor: '#0f3460',
+        color: '#fff',
+        padding: '4px 8px',
+        borderRadius: '4px',
         fontWeight: 'bold',
-        fontSize: '1.1rem',
-        minWidth: '50px',
-        textAlign: 'right'
+        fontSize: '0.9rem',
+        minWidth: '40px',
+        textAlign: 'center'
+    },
+    firstPlacePoints: {
+        backgroundColor: '#e94560',
+        boxShadow: '0 0 8px rgba(233, 69, 96, 0.6)'
+    },
+    footer: {
+        backgroundColor: '#111',
+        padding: '10px',
+        textAlign: 'center',
+        color: '#555',
+        fontSize: '0.8rem',
+        borderTop: '1px solid #333'
     },
     loading: {
         padding: '20px',
         textAlign: 'center',
-        color: '#888',
-        fontStyle: 'italic'
+        color: '#888'
     },
     empty: {
         padding: '20px',
         textAlign: 'center',
         color: '#666'
     },
-    footer: {
-        backgroundColor: '#000',
-        color: '#555',
-        textAlign: 'center',
-        padding: '5px',
-        fontSize: '0.7rem',
-        fontWeight: 'bold',
-        letterSpacing: '2px',
-        borderTop: '1px solid #333'
-    },
     loginPrompt: {
         padding: '10px',
+        backgroundColor: '#e94560',
+        color: '#fff',
         textAlign: 'center',
-        color: '#ffffff',
-        backgroundColor: '#2d1b2e', // Slight reddish tint background
-        borderBottom: '1px solid #333',
         fontSize: '0.9rem',
-        fontWeight: 'bold',
-        animation: 'pulse 2s infinite'
+        fontWeight: 'bold'
+    },
+    adContainer: {
+        width: '280px',
+        height: '250px',
+        backgroundColor: '#000',
+        border: '1px solid #333',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: '#333',
+        fontSize: '0.8rem',
+        letterSpacing: '2px'
     }
 };
 

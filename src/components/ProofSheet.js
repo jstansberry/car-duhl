@@ -2,10 +2,20 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { supabase, supabaseUrl } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import ImageDisplay from './ImageDisplay';
-import Login from './Login';
+
 
 const ProofSheet = () => {
-    const { isAdmin, loading: authLoading } = useAuth();
+    const { isAdmin, loading: authLoading, profileLoaded } = useAuth();
+
+    // Redirect non-admins
+    // Redirect non-admins
+    useEffect(() => {
+        if (!authLoading && profileLoaded && !isAdmin) {
+            window.location.href = '/';
+        }
+    }, [isAdmin, authLoading, profileLoaded]);
+
+
 
     // All puzzles
     const [puzzles, setPuzzles] = useState([]);
@@ -60,7 +70,7 @@ const ProofSheet = () => {
     // Memoize the distribution summary
     const distributionSummary = useMemo(() => {
         const counts = filteredPuzzles.reduce((acc, car) => {
-            const key = `${car.year}|${car.make}|${car.model}`;
+            const key = `${car.make}|${car.model}`;
             acc[key] = (acc[key] || 0) + 1;
             return acc;
         }, {});
@@ -68,15 +78,17 @@ const ProofSheet = () => {
         return Object.entries(counts)
             .sort((a, b) => b[1] - a[1]) // Sort by count descending
             .map(([key, count]) => {
-                const [year, make, model] = key.split('|');
-                return { year, make, model, count };
+                const [make, model] = key.split('|');
+                return { make, model, count };
             });
     }, [filteredPuzzles]);
 
     useEffect(() => {
-        fetchPuzzles();
-        fetchMakes();
-    }, []);
+        if (isAdmin) {
+            fetchPuzzles();
+            fetchMakes();
+        }
+    }, [isAdmin]);
 
     // When Make changes, fetch relevant models
     useEffect(() => {
@@ -269,6 +281,12 @@ const ProofSheet = () => {
         setIsEditing(null);
     };
 
+    // Prevent rendering while loading auth or if not admin
+    // Note: We wait for profileLoaded to distinguish between "not logged in" (isAdmin=false) and "not yet loaded"
+    if (authLoading || !profileLoaded || !isAdmin) {
+        return null; // Or a loading spinner
+    }
+
     return (
         <div style={styles.container}>
             {isSaving && (
@@ -280,21 +298,48 @@ const ProofSheet = () => {
                     </div>
                 </div>
             )}
-            <header style={styles.header}>
-                <h1>Proof Sheet</h1>
-
-                <div style={{ marginTop: '10px' }}><Login /></div>
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
                 {isLoading && <p>Loading data...</p>}
-            </header>
-
-            <div style={styles.adminControls}>
-                <button
-                    onClick={() => { setShowAddForm(!showAddForm); setIsEditing(null); resetForm(); }}
-                    style={styles.addButton}
-                >
-                    {showAddForm || isEditing ? 'Cancel' : '+ Add New Daily Car'}
-                </button>
             </div>
+
+            {/* Date Filter Section */}
+            <section style={styles.filterSection}>
+                <div style={styles.filterRow}>
+                    <div style={styles.filterField}>
+                        <label style={styles.filterLabel}>Start Date:</label>
+                        <input
+                            type="date"
+                            value={filterStartDate}
+                            onChange={(e) => setFilterStartDate(e.target.value)}
+                            style={styles.filterInput}
+                        />
+                    </div>
+                    <div style={styles.filterField}>
+                        <label style={styles.filterLabel}>End Date:</label>
+                        <input
+                            type="date"
+                            value={filterEndDate}
+                            onChange={(e) => setFilterEndDate(e.target.value)}
+                            style={styles.filterInput}
+                        />
+                    </div>
+                    <button
+                        onClick={() => { setFilterStartDate(''); setFilterEndDate(''); }}
+                        style={styles.clearButton}
+                    >
+                        Clear Filter
+                    </button>
+                    <button
+                        onClick={() => { setFilterStartDate(getNYDateString(0)); setFilterEndDate(getNYDateString(30)); }}
+                        style={styles.resetButton}
+                    >
+                        Reset to Next 30 Days
+                    </button>
+                    <span style={{ marginLeft: 'auto', color: '#a3f7bf', alignSelf: 'center', fontWeight: 'bold' }}>
+                        {filteredPuzzles.length} results
+                    </span>
+                </div>
+            </section>
 
             {(showAddForm || isEditing) && (
                 <section style={styles.formSection}>
@@ -379,55 +424,21 @@ const ProofSheet = () => {
                             </div>
                         </div>
 
-                        <button type="submit" style={styles.saveButton}>
-                            {isEditing ? 'Save Changes' : 'Create Puzzle'}
-                        </button>
+                        <div style={styles.formActions}>
+                            <button type="submit" style={styles.saveButton}>
+                                {isEditing ? 'Save Changes' : 'Create Puzzle'}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => { setShowAddForm(false); setIsEditing(null); resetForm(); }}
+                                style={styles.cancelButton}
+                            >
+                                Cancel
+                            </button>
+                        </div>
                     </form>
                 </section>
             )}
-
-
-
-
-
-            {/* Date Filter Section */}
-            <section style={styles.filterSection}>
-                <div style={styles.filterRow}>
-                    <div style={styles.filterField}>
-                        <label style={styles.filterLabel}>Start Date:</label>
-                        <input
-                            type="date"
-                            value={filterStartDate}
-                            onChange={(e) => setFilterStartDate(e.target.value)}
-                            style={styles.filterInput}
-                        />
-                    </div>
-                    <div style={styles.filterField}>
-                        <label style={styles.filterLabel}>End Date:</label>
-                        <input
-                            type="date"
-                            value={filterEndDate}
-                            onChange={(e) => setFilterEndDate(e.target.value)}
-                            style={styles.filterInput}
-                        />
-                    </div>
-                    <button
-                        onClick={() => { setFilterStartDate(''); setFilterEndDate(''); }}
-                        style={styles.clearButton}
-                    >
-                        Clear Filter
-                    </button>
-                    <button
-                        onClick={() => { setFilterStartDate(getNYDateString(0)); setFilterEndDate(getNYDateString(30)); }}
-                        style={styles.resetButton}
-                    >
-                        Reset to Next 30 Days
-                    </button>
-                    <span style={{ marginLeft: 'auto', color: '#a3f7bf', alignSelf: 'center', fontWeight: 'bold' }}>
-                        {filteredPuzzles.length} results
-                    </span>
-                </div>
-            </section>
 
             <div style={styles.grid}>
                 {filteredPuzzles.map((car) => (
@@ -497,6 +508,20 @@ const ProofSheet = () => {
                 ))}
             </div>
 
+            <div style={styles.adminControls}>
+                <button
+                    onClick={() => {
+                        setShowAddForm(true);
+                        setIsEditing(null);
+                        resetForm();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    style={styles.addButton}
+                >
+                    + Add New Daily Car
+                </button>
+            </div>
+
             <section style={styles.summarySection}>
                 <div
                     onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
@@ -512,7 +537,6 @@ const ProofSheet = () => {
                     <table style={styles.table}>
                         <thead>
                             <tr>
-                                <th style={styles.th}>Year</th>
                                 <th style={styles.th}>Make</th>
                                 <th style={styles.th}>Model</th>
                                 <th style={styles.th}>Count</th>
@@ -520,10 +544,9 @@ const ProofSheet = () => {
                         </thead>
                         <tbody>
                             {distributionSummary.map((item, idx) => {
-                                const key = `${item.year}|${item.make}|${item.model}`;
+                                const key = `${item.make}|${item.model}`;
                                 return (
                                     <tr key={key} style={styles.tr}>
-                                        <td style={styles.td}>{item.year}</td>
                                         <td style={styles.td}>{item.make}</td>
                                         <td style={styles.td}>{item.model}</td>
                                         <td style={{ ...styles.td, fontWeight: 'bold', color: item.count > 3 ? '#e94560' : '#ccc' }}>
@@ -643,6 +666,22 @@ const styles = {
         fontWeight: 'bold',
         fontSize: '1.1rem',
         cursor: 'pointer',
+        flex: 2
+    },
+    cancelButton: {
+        padding: '15px',
+        backgroundColor: 'transparent',
+        color: '#ccc',
+        border: '1px solid #555',
+        borderRadius: '8px',
+        fontWeight: 'bold',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        flex: 1
+    },
+    formActions: {
+        display: 'flex',
+        gap: '15px',
         marginTop: '10px'
     },
     summarySection: {
@@ -686,8 +725,8 @@ const styles = {
         justifyContent: 'center'
     },
     card: {
-        background: 'rgba(255, 255, 255, 0.05)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'rgba(144, 139, 139, 1)',
+        border: '1px solid rgba(255, 255, 255)',
         borderRadius: '12px',
         padding: '15px',
         width: '280px',
@@ -695,14 +734,14 @@ const styles = {
         flexDirection: 'column',
     },
     imageContainer: {
-        marginBottom: '10px',
+        marginBottom: '0px',
         borderRadius: '8px',
         overflow: 'hidden'
     },
     metadata: {
         width: '100%',
         fontSize: '0.85rem',
-        color: '#ccc',
+        color: '#0a0a0a',
         lineHeight: '1.4'
     },
     link: {

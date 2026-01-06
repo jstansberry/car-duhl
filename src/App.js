@@ -2,8 +2,8 @@ import React from 'react';
 import './index.css';
 import GameContainer from './components/GameContainer';
 import ProofSheet from './components/ProofSheet';
-
 import GrandPrixLeaderboard from './components/GrandPrixLeaderboard';
+import Header from './components/Header';
 
 function App() {
     const [path, setPath] = React.useState(window.location.pathname);
@@ -20,7 +20,8 @@ function App() {
     // Simple Router
     if (path === '/proof-sheet') {
         return (
-            <div className="App">
+            <div className="App" style={styles.appWrapper}>
+                <Header />
                 <ProofSheet />
             </div>
         );
@@ -28,20 +29,30 @@ function App() {
 
     // Default Route (Game) - Includes Grand Prix Leaderboard
     return (
-        <div className="App" style={styles.appContainer}>
-            <div style={styles.mainContent}>
-                <GameContainer />
-            </div>
+        <div className="App" style={styles.appWrapper}>
+            <Header />
 
-            <div style={styles.leaderboardContainer}>
-                <GrandPrixLeaderboard />
+            <div style={styles.mainContainer}>
+                <div style={styles.gameColumn}>
+                    <GameContainer />
+                </div>
+
+                <div style={styles.sidebarColumn}>
+                    <GrandPrixLeaderboard />
+                </div>
             </div>
         </div>
     );
 }
 
 const styles = {
-    appContainer: {
+    appWrapper: {
+        minHeight: '100vh',
+        backgroundColor: '#4c4c4c', // Lightened by ~25%
+        color: '#fff',
+        fontFamily: 'Arial, sans-serif'
+    },
+    mainContainer: {
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'center',
@@ -49,16 +60,18 @@ const styles = {
         gap: '40px',
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '20px'
+        padding: '0 20px 40px 20px'
     },
-    mainContent: {
-        flex: '1 1 500px', // Grow, shrink, basis
-        maxWidth: '600px',
-        minWidth: '300px'
+    gameColumn: {
+        flex: '1 1 600px', // Grow/Shrink foundation 600px
+        minWidth: '300px',
+        maxWidth: '650px', // Limit width to keep game tight
+        display: 'flex',
+        justifyContent: 'center' // Center the game container
     },
-    leaderboardContainer: {
-        flex: '0 0 auto', // Don't grow/shrink indiscriminately
-        marginTop: '20px' // Space on mobile if wrapped
+    sidebarColumn: {
+        flex: '0 0 auto',
+        marginTop: '20px' // Align with GameContainer padding (20px) so image and leaderboard tops align
     }
 };
 

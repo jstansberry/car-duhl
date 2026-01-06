@@ -103,7 +103,7 @@ const styles = {
         border: '2px solid #ccc',
         borderRadius: '8px',
         position: 'relative',
-        backgroundColor: '#000',
+        backgroundColor: '#853b3bff',
     },
     cropFrame: {
         width: '100%',

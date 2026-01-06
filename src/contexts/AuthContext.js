@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [session, setSession] = useState(null);
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [profileLoaded, setProfileLoaded] = useState(false);
 
     useEffect(() => {
         let mounted = true;
@@ -36,6 +37,8 @@ export const AuthProvider = ({ children }) => {
                         if (session?.user) {
                             // Non-blocking profile fetch
                             fetchProfile(session.user.id);
+                        } else {
+                            setProfileLoaded(true); // No profile to load
                         }
                     }
                 }
@@ -59,6 +62,7 @@ export const AuthProvider = ({ children }) => {
                     fetchProfile(session.user.id);
                 } else {
                     setProfile(null);
+                    setProfileLoaded(true);
                 }
 
                 setLoading(false);
@@ -84,6 +88,8 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Error fetching profile:', error);
+        } finally {
+            setProfileLoaded(true);
         }
     };
 
@@ -126,7 +132,8 @@ export const AuthProvider = ({ children }) => {
         isAdmin: profile?.is_admin || false,
         loginWithGoogle,
         logout,
-        loading
+        loading,
+        profileLoaded
     };
 
     return (

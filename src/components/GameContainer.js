@@ -3,7 +3,7 @@ import ImageDisplay from './ImageDisplay';
 import GuessForm from './GuessForm';
 import GuessHistory from './GuessHistory';
 import GameOverModal from './GameOverModal';
-import Login from './Login';
+
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, supabaseUrl } from '../lib/supabaseClient';
 
@@ -284,14 +284,6 @@ const GameContainer = () => {
 
     return (
         <div style={styles.container}>
-            <header style={styles.header}>
-                <div style={styles.headerLeft}>
-                    <h1 style={styles.title}>CAR-DUHL</h1>
-                    <p style={styles.subtitle}>Guess the car in 5 or fewer attempts!</p>
-                </div>
-                <Login />
-            </header>
-
             <ImageDisplay
                 imageUrl={`${supabaseUrl}/functions/v1/serve-crop?id=${dailyCar.id}&stage=${gameState === 'playing' ? guesses.length : 5}`}
                 zoomLevel={guesses.length}
@@ -373,30 +365,6 @@ const styles = {
         textAlign: 'center',
         color: '#fff',
         fontFamily: 'Arial, sans-serif'
-    },
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '20px',
-        width: '100%',
-        textAlign: 'left'
-    },
-    headerLeft: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    title: {
-        margin: 0,
-        fontSize: '2rem',
-        color: '#e94560',
-        fontWeight: 'bold',
-        letterSpacing: '1px'
-    },
-    subtitle: {
-        margin: '5px 0 0 0',
-        fontSize: '0.9rem',
-        color: '#ccc'
     },
     loading: {
         color: 'white',
