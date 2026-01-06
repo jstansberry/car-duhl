@@ -90,7 +90,7 @@ serve(async (req) => {
             headers: {
                 ...corsHeaders,
                 'Content-Type': 'image/jpeg',
-                'Cache-Control': 'public, max-age=31536000' // Immutable crops
+                'Cache-Control': 'public, max-age=60, must-revalidate' // Short cache for active editing
             }
         });
 

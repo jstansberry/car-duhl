@@ -67,9 +67,9 @@ serve(async (req) => {
         const maxZoom = game.max_zoom || 5;
 
         // Container size (Client side is 300x200)
-        // We generate 2x for Retina (600x400)
-        const TARGET_W = 600;
-        const TARGET_H = 400;
+        // We generate 3x pixel density (900x600) with MAX quality per user request.
+        const TARGET_W = 900;
+        const TARGET_H = 600;
 
         // Function: Get Crop Rect for a specific stage (guess count)
         // In the client, they use scale() on a large image in a small window.
@@ -85,17 +85,48 @@ serve(async (req) => {
         // Center of Visible Area = (Total Width * OriginX, Total Height * OriginY).
         // Top Left Crop X = CenterX - (VisibleWidth / 2).
 
-        const originalW = originalImage.width;
-        const originalH = originalImage.height;
+        // 3. Pre-Process: Crop to Aspect Ratio (Mimic object-fit: cover)
+        // The client container is 3:2 (e.g. 300x200). `object-fit: cover` centers the image.
+        // We must perform this "Cover Crop" first so our Zoom/Pan logic acts on the same visual content.
 
-        const generateStage = async (stage) => {
+        const TARGET_RATIO = 3 / 2;
+        const sourceW = originalImage.width;
+        const sourceH = originalImage.height;
+        const sourceRatio = sourceW / sourceH;
+
+        let baseCropX = 0;
+        let baseCropY = 0;
+        let baseCropW = sourceW;
+        let baseCropH = sourceH;
+
+        if (sourceRatio > TARGET_RATIO) {
+            // Too wide: Crop width (center)
+            baseCropW = sourceH * TARGET_RATIO;
+            baseCropX = (sourceW - baseCropW) / 2;
+        } else if (sourceRatio < TARGET_RATIO) {
+            // Too tall: Crop height (center)
+            baseCropH = sourceW / TARGET_RATIO;
+            baseCropY = (sourceH - baseCropH) / 2;
+        }
+
+        // We act on the "Visual Base" image (the theoretical cropped image seen in the container)
+        // To save memory, we can calculate offsets relative to the original rather than creating an intermediate image,
+        // but `ImageScript` might be faster if we just crop once? 
+        // Let's create `baseImage` to simplify logic and ensure coordinate systems match 100%.
+        const baseImage = originalImage.clone().crop(
+            Math.round(baseCropX),
+            Math.round(baseCropY),
+            Math.round(baseCropW),
+            Math.round(baseCropH)
+        );
+
+        const baseW = baseImage.width;
+        const baseH = baseImage.height;
+
+
+
+        const generateStage = async (stage: number) => {
             // Calculate Scale for this stage
-            // Logic from ImageDisplay.js:
-            // for loop 0 to guessCount; scale *= 0.9 - (i * 0.025)...
-            // Wait, "zoomLevel" in ImageDisplay IS "guessCount".
-            // Stage 0 (0 guesses) = Max Zoom.
-            // Stage 5 = Min Zoom.
-
             let scale = maxZoom;
             let currentReduction = 0.90;
             const progression = 0.025;
@@ -107,42 +138,50 @@ serve(async (req) => {
             }
             scale = Math.max(scale, 1);
 
-            // Calculate Crop Window
-            const visibleW = originalW / scale;
-            const visibleH = originalH / scale;
 
-            const centerX = originalW * originX;
-            const centerY = originalH * originY;
 
-            let cropX = centerX - (visibleW / 2);
-            let cropY = centerY - (visibleH / 2);
+            // Calculate Crop Window on the BASE IMAGE
+            const visibleW = baseW / scale;
+            const visibleH = baseH / scale;
 
-            // Clamp crop to bounds (CSS transform might show whitespace/black bg if Origin is near edge, 
-            // but usually we want to clamp to image bounds for safety).
-            // Actually, if we stick to strict CSS replication, CSS would show background.
-            // For simplicity, let's clamp.
+            // CORRECT PIVOT MATH:
+            // The Crop origin is derived from the mapping: x_source = P + (x_screen - P) / S
+            // Where x_screen is 0 (left edge of view).
+            // Simplifies to: CropX = P * (1 - 1/scale)
+
+            const centerX = baseW * originX;
+            const centerY = baseH * originY;
+
+            let cropX = centerX * (1 - 1 / scale);
+            let cropY = centerY * (1 - 1 / scale);
+
+            // Clamp crop to bounds of BASE IMAGE
             if (cropX < 0) cropX = 0;
             if (cropY < 0) cropY = 0;
-            if (cropX + visibleW > originalW) cropX = originalW - visibleW;
-            if (cropY + visibleH > originalH) cropY = originalH - visibleH;
+            if (cropX + visibleW > baseW) cropX = baseW - visibleW;
+            if (cropY + visibleH > baseH) cropY = baseH - visibleH;
 
-            // Perform Crop
-            // Clone original to avoid mutating shared object (if ImageScript mutates? safer to assume yes or verify)
-            // ImageScript methods usually return new or modify in place? docs say crop returns new image usually.
-            // But let's verify: ImageScript.crop(x,y,w,h) returns a new image.
+            console.log(`Stage ${stage}: Scale[${scale.toFixed(2)}] Origin[${originX},${originY}] Base[${baseW}x${baseH}] Crop[${cropX.toFixed(0)},${cropY.toFixed(0)} ${visibleW.toFixed(0)}x${visibleH.toFixed(0)}]`);
 
-            const cropped = originalImage.clone().crop(
+            // Perform Crop on BASE IMAGE
+            const cropped = baseImage.clone().crop(
                 Math.round(cropX),
                 Math.round(cropY),
                 Math.round(visibleW),
                 Math.round(visibleH)
             );
 
-            // Resize to standard container size
-            const resized = cropped.resize(TARGET_W, TARGET_H);
+            // OPTIMIZATION: Do not upscale!
+            // If the crop is smaller than our target (900x600), sending the native pixels 
+            // looks much better than server-side upscaling which adds grain/blur.
+            // The browser is substantialy better at rendering small images into the viewport.
+            if (visibleW < TARGET_W) {
+                console.log(`Stage ${stage}: Rendering Native Resolution (${visibleW.toFixed(0)}x${visibleH.toFixed(0)})`);
+                return await cropped.encodeJPEG(100);
+            }
 
-            // Encode (Quality 80)
-            return await resized.encodeJPEG(80);
+            // Downscale if larger (to save bandwidth)
+            return await cropped.resize(TARGET_W, TARGET_H).encodeJPEG(100);
         };
 
         const uploads = [];
@@ -151,51 +190,31 @@ serve(async (req) => {
         for (let i = 0; i < 5; i++) {
             const buffer = await generateStage(i);
             const path = `${gameId}/stage_${i}.jpg`;
-            uploads.push(supabase.storage.from('game-crops').upload(path, buffer, {
+            const promise = supabase.storage.from('game-crops').upload(path, buffer, {
                 contentType: 'image/jpeg',
-                upsert: true
-            }));
+                upsert: true,
+                cacheControl: '0'
+            }).then(({ data, error }) => {
+                if (error) console.error(`Upload error stage_${i}:`, error);
+                else console.log(`Uploaded stage_${i}:`, data);
+            });
+            uploads.push(promise);
         }
 
-        // Generate Stage 5 (Full Image / Reveal)
-        // Stage 5 is basically the full image, or maybe specific reveal image logic?
-        // Implementation plan says "Upload full image as stage_5.jpg".
-        // Let's just resize original to target W/H to keep it consistent? 
-        // Or if aspect ratio differs, maybe fit?
-        // Let's treat Stage 5 as "Scale=1".
+        // Generate Stage 5 (Full Reveal)
+        console.log("Generating Stage 5 (Reveal)...");
+        // Target 900x600 for sharp reveal
+        const buffer5 = await baseImage.clone().resize(TARGET_W, TARGET_H).encodeJPEG(100);
 
-        /* 
-           Wait, logic check: 
-           In ImageDisplay.js, if gameStatus !== 'playing', getScale returns 1.
-           So Stage 5 should just be Scale 1.
-        */
-        const buffer5 = await generateStage(5); // This executes loop 5 times, scale reduces to ~1 (or close to it logic-wise)
-        // Wait, ImageDisplay loop goes up to `zoomLevel`. Max is 5?
-        // If zoomLevel=5, scale is reduced 5 times.
-        // Actually, if "Won", scale is forced to 1.
-        // Let's perform a forced Scale=1 generation for stage_5.
-
-        const fullImageResized = originalImage.clone().resize(TARGET_W, TARGET_H); // Distorts if aspect ratio differs?
-        // ImageDisplay: objectFit: 'cover'.
-        // To match 'cover' on 300x200 container with Scale 1:
-        // If we resize straightforwardly, we might distort.
-        // Better to use resize(TARGET_W, TARGET_H) assuming the source was roughly correct aspect?
-        // Or use ImageScript's 'cover' equivalent?
-        // ImageScript documentation: resize(w, h) stretches.
-        // Let's assume for now resizing is acceptable or source aligns.
-        // Actually, let's use the same `generateStage` loop logic but ensure `scale` logic matches "Game Over".
-        // If we want "Stage 5" to be the "Zoom Level 5" state (which is the widest clue before reveal? No, clues are 0,1,2,3,4).
-        // The 5th array item is the 6th state.
-        // Let's store Stage 0,1,2,3,4 (The 5 clue states).
-        // And Stage 5 (The Reveal).
-
-        // Stage 5 (Reveal): Just use the full image resized (or cropped to aspect ratio).
-        // Let's use `resize` for now.
-
-        uploads.push(supabase.storage.from('game-crops').upload(`${gameId}/stage_5.jpg`, await fullImageResized.encodeJPEG(80), {
+        const promise5 = supabase.storage.from('game-crops').upload(`${gameId}/stage_5.jpg`, buffer5, {
             contentType: 'image/jpeg',
-            upsert: true
-        }));
+            upsert: true,
+            cacheControl: '0'
+        }).then(({ data, error }) => {
+            if (error) console.error(`Upload error stage_5:`, error);
+            else console.log(`Uploaded stage_5:`, data);
+        });
+        uploads.push(promise5);
 
         await Promise.all(uploads);
 

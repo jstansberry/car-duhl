@@ -370,7 +370,7 @@ const ProofSheet = () => {
                             <div style={styles.previewWrapper}>
                                 <ImageDisplay
                                     imageUrl={formData.imageUrl}
-                                    zoomLevel={1}
+                                    zoomLevel={0} // Stage 0 (Start of Game)
                                     gameStatus='playing'
                                     transformOrigin={formData.transformOrigin}
                                     maxZoom={formData.maxZoom}
@@ -452,7 +452,7 @@ const ProofSheet = () => {
                                     />
                                     {/* Right: Server-Side Crop (Stage 0 / Guess #1) */}
                                     <ImageDisplay
-                                        imageUrl={`${supabaseUrl}/functions/v1/serve-crop?id=${car.id}&stage=0`} // Stage 0 = Max Zoom
+                                        imageUrl={`${supabaseUrl}/functions/v1/serve-crop?id=${car.id}&stage=0&t=${Date.now()}`} // Bust cache
                                         zoomLevel={1}
                                         gameStatus='playing'
                                         transformOrigin={car.transformOrigin}
