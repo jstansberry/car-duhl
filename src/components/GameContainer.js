@@ -20,7 +20,17 @@ const GameContainer = () => {
     const [userScore, setUserScore] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
     const { user } = useAuth();
+
     const prevUserIdRef = useRef(user ? user.id : 'anon');
+
+    // Derived state for solved fields
+    const solved = React.useMemo(() => {
+        return {
+            make: guesses.some(g => g.isMakeCorrect),
+            model: guesses.some(g => g.isModelCorrect),
+            year: guesses.some(g => g.isYearCorrect)
+        };
+    }, [guesses]);
 
     // ... existing logic ...
 
@@ -296,6 +306,8 @@ const GameContainer = () => {
                 onGuess={handleGuess}
                 gameState={gameState}
                 onViewResults={() => setShowModal(true)}
+                solved={solved}
+                correctValues={dailyCar}
             />
 
             <GuessHistory guesses={guesses} />

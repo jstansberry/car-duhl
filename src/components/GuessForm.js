@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
-const GuessForm = ({ onGuess, gameState, onViewResults }) => {
+const GuessForm = ({ onGuess, gameState, onViewResults, solved = {}, correctValues = {} }) => {
     const [selectedMake, setSelectedMake] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
     const [year, setYear] = useState('');
@@ -24,9 +24,29 @@ const GuessForm = ({ onGuess, gameState, onViewResults }) => {
         fetchMakes();
     }, []);
 
+    // Auto-fill and lock solved fields
+    useEffect(() => {
+        if (solved.make && correctValues.make) {
+            setSelectedMake(correctValues.make);
+            // Also need to ensure model list is populated if we force make? 
+            // The existing make-change effect handles model fetching, 
+            // but we might need to verify timing or dependencies.
+        }
+        // If make is solved, model might also be solved
+        if (solved.model && correctValues.model) {
+            setSelectedModel(correctValues.model);
+        }
+        if (solved.year && correctValues.year) {
+            setYear(correctValues.year);
+        }
+    }, [solved, correctValues]);
+
     // Fetch models when make changes
     useEffect(() => {
         const fetchModels = async () => {
+            // If make is solved/forced, we still need to load models so the "Select Model" works 
+            // (unless model is also solved, in which case it's just locked).
+            // The logic below works fine even if forced.
             if (selectedMake) {
                 // We need to look up the make ID first, or we can assume we stored the make object in state
                 // Actually, the select value is currently the Make Name (string) based on old code
@@ -73,8 +93,9 @@ const GuessForm = ({ onGuess, gameState, onViewResults }) => {
                 <select
                     value={selectedMake}
                     onChange={(e) => setSelectedMake(e.target.value)}
-                    disabled={gameState !== 'playing'}
+                    disabled={gameState !== 'playing' || solved.make}
                     className="guess-input guess-input-make"
+                    style={solved.make ? styles.solvedInput : {}}
                     required
                 >
                     <option value="">Select Make</option>
@@ -86,8 +107,9 @@ const GuessForm = ({ onGuess, gameState, onViewResults }) => {
                 <select
                     value={selectedModel}
                     onChange={(e) => setSelectedModel(e.target.value)}
-                    disabled={!selectedMake || gameState !== 'playing'}
+                    disabled={!selectedMake || gameState !== 'playing' || solved.model}
                     className="guess-input guess-input-model"
+                    style={solved.model ? styles.solvedInput : {}}
                     required
                 >
                     <option value="">Select Model</option>
@@ -99,8 +121,9 @@ const GuessForm = ({ onGuess, gameState, onViewResults }) => {
                 <select
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
-                    disabled={gameState !== 'playing'}
+                    disabled={gameState !== 'playing' || solved.year}
                     className="guess-input guess-input-year"
+                    style={solved.year ? styles.solvedInput : {}}
                     required
                 >
                     <option value="">Year</option>
@@ -163,6 +186,12 @@ const styles = {
         color: '#fff',
         fontSize: '0.9rem',
         marginTop: '5px'
+    },
+    solvedInput: {
+        border: '2px solid #4caf50',
+        backgroundColor: '#e8f5e9',
+        color: '#2e7d32',
+        fontWeight: 'bold'
     }
 };
 
