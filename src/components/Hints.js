@@ -15,7 +15,7 @@ const Hints = ({ country, year, funFacts, title = "Need a Hint?" }) => {
 
     return (
         <div style={styles.container}>
-            <h3 style={styles.title}>{title}</h3>
+            {title && <h3 style={styles.title}>{title}</h3>}
             <div style={styles.buttonGroup}>
                 {/* 1. Country of Origin */}
                 <div style={styles.hintBlock}>
