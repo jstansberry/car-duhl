@@ -20,6 +20,7 @@ const GameContainer = () => {
     const [showModal, setShowModal] = useState(false);
     const [userScore, setUserScore] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [hintsRevealed, setHintsRevealed] = useState(false);
     const { user } = useAuth();
 
     const prevUserIdRef = useRef(user ? user.id : 'anon');
@@ -313,16 +314,36 @@ const GameContainer = () => {
                 correctValues={dailyCar}
             />
 
-            <GuessHistory guesses={guesses} />
-
-            {dailyCar && (
-                <Hints
-                    country={dailyCar.country}
-                    year={dailyCar.year}
-                    funFacts={dailyCar.funFacts}
-                    title={gameState === 'won' || gameState === 'lost' ? "Learn More" : "Need a Hint?"}
-                />
+            {/* Hints Section (conditional) */}
+            {dailyCar && (guesses.length >= 4 || gameState !== 'playing') && (
+                !hintsRevealed ? (
+                    <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+                        <button
+                            onClick={() => setHintsRevealed(true)}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                color: '#fff',
+                                fontSize: '0.9rem',
+                                textDecoration: 'underline',
+                                cursor: 'pointer',
+                                padding: '5px'
+                            }}
+                        >
+                            {gameState === 'playing' ? "need a hint?" : "learn more"}
+                        </button>
+                    </div>
+                ) : (
+                    <Hints
+                        country={dailyCar.country}
+                        year={dailyCar.year}
+                        funFacts={dailyCar.funFacts}
+                        title={null}
+                    />
+                )
             )}
+
+            <GuessHistory guesses={guesses} />
 
             {showModal && (
                 <GameOverModal

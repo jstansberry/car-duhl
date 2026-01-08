@@ -126,7 +126,7 @@ const GuessForm = ({ onGuess, gameState, onViewResults, solved = {}, correctValu
                     style={solved.year ? styles.solvedInput : {}}
                     required
                 >
-                    <option value="">Year</option>
+                    <option value="">Year +/-2</option>
                     {Array.from({ length: new Date().getFullYear() - 1949 }, (_, i) => new Date().getFullYear() - i).map(y => (
                         <option key={y} value={y}>{y}</option>
                     ))}
@@ -142,8 +142,6 @@ const GuessForm = ({ onGuess, gameState, onViewResults, solved = {}, correctValu
             >
                 {gameState === 'playing' ? 'GUESS' : 'VIEW RESULTS'}
             </button>
-
-            <div style={styles.hint}>year +/- 2</div>
         </form >
     );
 };

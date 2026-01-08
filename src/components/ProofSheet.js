@@ -250,22 +250,42 @@ const ProofSheet = () => {
 
             if (error) throw error;
 
-            // Trigger Server-Side Crop Generation
-            const { error: genError } = await supabase.functions.invoke('generate-crops', {
-                body: { id: savedId }
-            });
+            // Determine if we need to regenerate crops
+            let shouldGenerateCrops = true;
+            if (isEditing) {
+                const original = puzzles.find(p => p.id === isEditing);
+                if (original) {
+                    const imageSame = original.imageUrl === formData.imageUrl;
+                    const zoomSame = parseFloat(original.maxZoom) === parseFloat(formData.maxZoom);
+                    const originSame = original.transformOrigin === formData.transformOrigin;
 
-            if (genError) {
-                console.error("Crop generation failed:", genError);
-                alert("Puzzle saved, but crop generation failed. Please try saving again.");
+                    if (imageSame && zoomSame && originSame) {
+                        shouldGenerateCrops = false;
+                    }
+                }
+            }
+
+            if (shouldGenerateCrops) {
+                // Trigger Server-Side Crop Generation
+                const { error: genError } = await supabase.functions.invoke('generate-crops', {
+                    body: { id: savedId }
+                });
+
+                if (genError) {
+                    console.error("Crop generation failed:", genError);
+                    alert("Puzzle saved, but crop generation failed. Please try saving again.");
+                } else {
+                    fetchPuzzles();
+                    setIsEditing(null);
+                    setShowAddForm(false);
+                    resetForm();
+                }
             } else {
+                console.log("Skipping crop generation - no image changes detected.");
                 fetchPuzzles();
                 setIsEditing(null);
                 setShowAddForm(false);
                 resetForm();
-                // Removed alert to streamline flow, or keep it if preferred. 
-                // Creating a more subtle notification would be better, but user asked for loading modal.
-                // The overlay disappearing is a good enough signal + list update.
             }
 
         } catch (error) {
