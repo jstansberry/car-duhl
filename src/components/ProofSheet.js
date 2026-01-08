@@ -5,7 +5,7 @@ import ImageDisplay from './ImageDisplay';
 
 
 const ProofSheet = () => {
-    const { isAdmin, loading: authLoading, profileLoaded } = useAuth();
+    const { isAdmin, loading: authLoading, profileLoaded, session } = useAuth();
 
     // Redirect non-admins
     // Redirect non-admins
@@ -51,7 +51,9 @@ const ProofSheet = () => {
         gameOverImageURL: '',
         source: '',
         transformOrigin: 'center center',
-        maxZoom: 5
+        maxZoom: 5,
+        country: '',
+        funFacts: ''
     });
 
     // Memoize the sorted and filtered puzzles
@@ -126,7 +128,9 @@ const ProofSheet = () => {
                 gameOverImageURL: d.game_over_image_url || '',
                 source: d.source || '',
                 transformOrigin: d.transform_origin,
-                maxZoom: d.max_zoom
+                maxZoom: d.max_zoom,
+                country: d.country || '',
+                funFacts: d.fun_facts || ''
             }));
 
             setPuzzles(formatted);
@@ -167,6 +171,45 @@ const ProofSheet = () => {
         }
     };
 
+    const generateHints = async () => {
+        if (!formData.make_id || !formData.model_id) {
+            alert("Please select a Make and Model first.");
+            return;
+        }
+
+        const makeName = makes.find(m => m.id == formData.make_id)?.name;
+        const modelName = models.find(m => m.id == formData.model_id)?.name;
+
+        setIsLoading(true);
+        try {
+            const { data, error } = await supabase.functions.invoke('generate-hints', {
+                body: {
+                    make: makeName,
+                    model: modelName,
+                    year: formData.year
+                }
+            });
+
+            if (error) throw error;
+            if (data) {
+                setFormData(prev => ({
+                    ...prev,
+                    country: data.country_code || prev.country,
+                    funFacts: data.fun_facts || prev.funFacts
+                }));
+            }
+        } catch (error) {
+            console.error("Error generating hints:", error);
+            // Log full error details for debugging
+            if (error && typeof error === 'object') {
+                console.error("Error Details:", JSON.stringify(error, null, 2));
+            }
+            alert(`Failed to generate hints: ${error.message} \nSee console for details.`);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleSave = async (e) => {
         e.preventDefault();
         setIsSaving(true);
@@ -181,7 +224,9 @@ const ProofSheet = () => {
                 game_over_image_url: formData.gameOverImageURL || null,
                 source: formData.source || null,
                 transform_origin: formData.transformOrigin,
-                max_zoom: parseFloat(formData.maxZoom)
+                max_zoom: parseFloat(formData.maxZoom),
+                country: formData.country || null,
+                fun_facts: formData.funFacts || null
             };
 
             let savedId = isEditing;
@@ -261,7 +306,9 @@ const ProofSheet = () => {
             gameOverImageURL: car.gameOverImageURL,
             source: car.source,
             transformOrigin: car.transformOrigin,
-            maxZoom: car.maxZoom
+            maxZoom: car.maxZoom,
+            country: car.country,
+            funFacts: car.funFacts
         });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -276,7 +323,9 @@ const ProofSheet = () => {
             gameOverImageURL: '',
             source: '',
             transformOrigin: 'center center',
-            maxZoom: 5
+            maxZoom: 5,
+            country: '',
+            funFacts: ''
         });
         setIsEditing(null);
     };
@@ -394,6 +443,43 @@ const ProofSheet = () => {
                             <input type="url" value={formData.gameOverImageURL} onChange={e => setFormData({ ...formData, gameOverImageURL: e.target.value })} style={styles.crudInput} />
                         </div>
 
+                        <div style={styles.formRow}>
+                            <div style={styles.field}>
+                                <label style={styles.label}>
+                                    Country Code (2-letter):
+                                    <span style={{ marginLeft: '10px', fontSize: '0.8rem', color: '#666' }}>
+                                        {formData.country && <img src={`https://flagcdn.com/h20/${formData.country.toLowerCase()}.png`} alt="flag" style={{ verticalAlign: 'middle' }} />}
+                                    </span>
+                                </label>
+                                <input
+                                    type="text"
+                                    maxLength="2"
+                                    value={formData.country}
+                                    onChange={e => setFormData({ ...formData, country: e.target.value.toUpperCase() })}
+                                    placeholder="US, JP, DE..."
+                                    style={styles.crudInput}
+                                />
+                            </div>
+                            <div style={{ ...styles.field, flex: 2 }}>
+                                <label style={styles.label}>
+                                    Fun Facts (Bullet points):
+                                    <button
+                                        type="button"
+                                        onClick={generateHints}
+                                        style={{ ...styles.addButton, padding: '2px 8px', fontSize: '0.7rem', marginLeft: '10px', float: 'right' }}
+                                    >
+                                        ✨ Auto-Fill with AI
+                                    </button>
+                                </label>
+                                <textarea
+                                    rows="4"
+                                    value={formData.funFacts}
+                                    onChange={e => setFormData({ ...formData, funFacts: e.target.value })}
+                                    style={{ ...styles.crudInput, resize: 'vertical' }}
+                                />
+                            </div>
+                        </div>
+
                         <div style={styles.field}>
                             <label style={styles.label}>Image Source / Credit URL:</label>
                             <input type="url" value={formData.source} onChange={e => setFormData({ ...formData, source: e.target.value })} placeholder="https://..." style={styles.crudInput} />
@@ -463,7 +549,7 @@ const ProofSheet = () => {
                                     />
                                     {/* Right: Server-Side Crop (Stage 0 / Guess #1) */}
                                     <ImageDisplay
-                                        imageUrl={`${supabaseUrl}/functions/v1/serve-crop?id=${car.id}&stage=0&t=${Date.now()}`} // Bust cache
+                                        imageUrl={`${supabaseUrl}/functions/v1/serve-crop?id=${car.id}&stage=0&t=${Date.now()}&token=${session?.access_token}`} // Bust cache & token
                                         zoomLevel={1}
                                         gameStatus='playing'
                                         transformOrigin={car.transformOrigin}

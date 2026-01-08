@@ -3,6 +3,7 @@ import ImageDisplay from './ImageDisplay';
 import GuessForm from './GuessForm';
 import GuessHistory from './GuessHistory';
 import GameOverModal from './GameOverModal';
+import Hints from './Hints';
 
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, supabaseUrl } from '../lib/supabaseClient';
@@ -66,7 +67,9 @@ const GameContainer = () => {
                         // storing them for reference or fallback if needed, but primary logic will use ID
                         id: data.id,
                         transformOrigin: data.transform_origin,
-                        maxZoom: data.max_zoom
+                        maxZoom: data.max_zoom,
+                        country: data.country,
+                        funFacts: data.fun_facts
                     };
                     setDailyCar(carData);
 
@@ -311,6 +314,15 @@ const GameContainer = () => {
             />
 
             <GuessHistory guesses={guesses} />
+
+            {dailyCar && (
+                <Hints
+                    country={dailyCar.country}
+                    year={dailyCar.year}
+                    funFacts={dailyCar.funFacts}
+                    title={gameState === 'won' || gameState === 'lost' ? "Learn More" : "Need a Hint?"}
+                />
+            )}
 
             {showModal && (
                 <GameOverModal

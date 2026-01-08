@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ImageDisplay = ({
     imageUrl,
@@ -12,6 +12,22 @@ const ImageDisplay = ({
     clickable = true
 }) => {
     const [isEnlarged, setIsEnlarged] = useState(false);
+    const [currentUrl, setCurrentUrl] = useState(imageUrl);
+    const [prevUrl, setPrevUrl] = useState(null);
+
+    // Sync prop with state and manage transition history
+    useEffect(() => {
+        if (imageUrl !== currentUrl) {
+            setPrevUrl(currentUrl);
+            setCurrentUrl(imageUrl);
+
+            // Clean up previous image after transition
+            const timer = setTimeout(() => {
+                setPrevUrl(null);
+            }, 800); // Matches CSS animation duration
+            return () => clearTimeout(timer);
+        }
+    }, [imageUrl, currentUrl]);
 
     // Legacy Client-Side Zoom (for Admin ProofSheet preview)
     const getScale = () => {
@@ -56,9 +72,31 @@ const ImageDisplay = ({
                     ...styles.cropFrame,
                     userSelect: 'none',
                     WebkitUserSelect: 'none',
+                    position: 'relative' // Ensure absolute children are contained
                 }}>
+                    {/* Render Previous Image (Fading Out/Background) */}
+                    {!useClientSideZoom && prevUrl && (
+                        <img
+                            src={prevUrl}
+                            alt="Previous view"
+                            style={{
+                                ...styles.image,
+                                width: '100%',
+                                height: '100%',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                objectFit: 'cover',
+                                pointerEvents: 'none',
+                                zIndex: 1
+                            }}
+                        />
+                    )}
+
+                    {/* Render Current Image (Fading In) */}
                     <img
-                        src={imageUrl}
+                        key={currentUrl} // Key change triggers animation
+                        src={currentUrl}
                         alt="Guess the car"
                         draggable="false"
                         onDragStart={(e) => e.preventDefault()}
@@ -67,15 +105,19 @@ const ImageDisplay = ({
                             ...styles.image,
                             width: '100%',
                             height: '100%',
-                            // Conditional Styling:
-                            // If Server-Side (default): fit to container, no transform
-                            // If Client-Side (Admin): Apply scale & transformOrigin
                             objectFit: 'cover',
                             pointerEvents: 'none',
+                            // Conditional Styling:
                             ...(useClientSideZoom ? {
                                 transform: `scale(${currentScale})`,
                                 transformOrigin: transformOrigin || 'center center',
-                            } : {})
+                            } : {
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                zIndex: 2,
+                                animation: prevUrl ? 'softFadeIn 0.8s ease-in-out' : 'none'
+                            })
                         }}
                     />
                 </div>
@@ -127,3 +169,13 @@ const styles = {
 };
 
 export default ImageDisplay;
+
+// Add generic fade in keyframes
+const styleSheet = document.createElement("style");
+styleSheet.innerText = `
+@keyframes softFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+`;
+document.head.appendChild(styleSheet);
