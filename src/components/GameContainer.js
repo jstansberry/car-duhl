@@ -312,6 +312,7 @@ const GameContainer = () => {
                 onViewResults={() => setShowModal(true)}
                 solved={solved}
                 correctValues={dailyCar}
+                currentGuessCount={guesses.length}
             />
 
             {/* Hints Section (conditional) */}

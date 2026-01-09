@@ -9,7 +9,7 @@ const GameOverModal = ({ dailyCar, guesses, gameState, score, onClose }) => {
         const date = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
         const status = gameState === 'won' ? `${guesses.length}/5` : 'X/5';
 
-        let text = `Car-duhl ${date} ${status}\n`;
+        let text = `My Daily Garage ${date} ${status}\n`;
         if (score !== undefined) text += `Score: ${score}\n`;
         text += '\n';
 
@@ -138,9 +138,10 @@ const styles = {
     title: {
         fontSize: '2rem',
         marginBottom: '10px',
-        background: '-webkit-linear-gradient(45deg, #e94560, #a3f7bf)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
+        color: '#ffffff',
+        // background: '-webkit-linear-gradient(45deg, #e94560, #a3f7bf)', (Removed gradient)
+        // WebkitBackgroundClip: 'text',
+        // WebkitTextFillColor: 'transparent',
     },
     carDisplay: {
         width: '100%',

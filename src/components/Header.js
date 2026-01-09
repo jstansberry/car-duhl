@@ -11,8 +11,8 @@ const Header = () => {
                 {/* Left: Logo/Title */}
                 <a href="/" style={styles.leftLink}>
                     <div style={styles.left}>
-                        <h1 style={styles.title}>CAR-DUHL</h1>
-                        <span style={styles.subtitle}>Guess the car in 5 tries</span>
+                        <h1 style={styles.title}>MY DAILY GARAGE</h1>
+                        <span style={styles.subtitle}>A new car in your garage every day!</span>
                     </div>
                 </a>
 
@@ -69,7 +69,7 @@ const styles = {
     title: {
         margin: 0,
         fontSize: '1.4rem',
-        color: '#e94560',
+        color: '#ffffff',
         fontWeight: 'bold',
         letterSpacing: '1px',
         lineHeight: 1
