@@ -28,7 +28,7 @@ h3 {
 }
 
 h1 {
-  background: -webkit-linear-gradient(45deg, #e94560, #a3f7bf);
+  background: #ffffff;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -135,6 +135,7 @@ input[type=number] {
     opacity: 1;
   }
 }
+
 /* Guess Form Responsiveness */
 .guess-form-row {
   display: flex;
@@ -147,26 +148,33 @@ input[type=number] {
 
 .guess-input {
   box-sizing: border-box;
-  padding: 10px; /* Reduced specific padding slightly */
+  padding: 10px;
+  /* Reduced specific padding slightly */
   border-radius: 8px;
-  font-size: 16px; /* Prevents iOS zoom */
+  font-size: 16px;
+  /* Prevents iOS zoom */
   border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.05); /* Fallback */
+  background: rgba(255, 255, 255, 0.05);
+  /* Fallback */
   color: var(--text-color);
 }
 
 .guess-input-make {
-  flex: 1 1 110px; /* Reduced basis */
-  min-width: 0; /* Allow shrink */
+  flex: 1 1 110px;
+  /* Reduced basis */
+  min-width: 0;
+  /* Allow shrink */
 }
 
 .guess-input-model {
-  flex: 2 1 140px; /* Reduced basis */
+  flex: 2 1 140px;
+  /* Reduced basis */
   min-width: 0;
 }
 
 .guess-input-year {
-  flex: 0 1 90px; /* Reduced basis */
+  flex: 0 1 90px;
+  /* Reduced basis */
   min-width: 0;
 }
 
@@ -174,10 +182,11 @@ input[type=number] {
   .guess-form-row {
     gap: 12px;
   }
-  
+
   .guess-input-make,
   .guess-input-model,
   .guess-input-year {
-    flex: 1 1 100%; /* Stack fully on mobile */
+    flex: 1 1 100%;
+    /* Stack fully on mobile */
   }
 }

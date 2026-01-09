@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
-const GuessForm = ({ onGuess, gameState, onViewResults, solved = {}, correctValues = {} }) => {
+const GuessForm = ({ onGuess, gameState, onViewResults, solved = {}, correctValues = {}, currentGuessCount = 0 }) => {
     const [selectedMake, setSelectedMake] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
     const [year, setYear] = useState('');
@@ -140,7 +140,9 @@ const GuessForm = ({ onGuess, gameState, onViewResults, solved = {}, correctValu
                     backgroundColor: gameState === 'playing' ? '#333' : '#e94560'
                 }}
             >
-                {gameState === 'playing' ? 'GUESS' : 'VIEW RESULTS'}
+                {gameState === 'playing'
+                    ? (currentGuessCount === 4 ? 'LAST GUESS!' : `GUESS ${currentGuessCount + 1}/5`)
+                    : 'VIEW RESULTS'}
             </button>
         </form >
     );
