@@ -155,7 +155,7 @@ serve(async (req) => {
             headers: {
                 ...corsHeaders,
                 'Content-Type': 'image/jpeg',
-                'Cache-Control': 'public, max-age=60, must-revalidate' // Short cache for active editing
+                'Cache-Control': 'public, max-age=86400, must-revalidate' // Cache for 1 day
             }
         });
 

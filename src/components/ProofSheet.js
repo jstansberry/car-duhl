@@ -606,7 +606,7 @@ const ProofSheet = () => {
                                     />
                                     {/* Right: Server-Side Crop (Stage 0 / Guess #1) */}
                                     <ImageDisplay
-                                        imageUrl={`${supabaseUrl}/functions/v1/serve-crop?id=${car.id}&stage=0&t=${Date.now()}&token=${session?.access_token}`} // Bust cache & token
+                                        imageUrl={`${supabaseUrl}/functions/v1/serve-crop?id=${car.id}&stage=0&token=${session?.access_token}`} // Removed cache buster
                                         zoomLevel={1}
                                         gameStatus='playing'
                                         transformOrigin={car.transformOrigin}

@@ -36,6 +36,8 @@ serve(async (req) => {
         - "country_code": The ISO 3166-1 alpha-2 country code of the MANUFACTURER'S origin (e.g. "US", "JP", "DE", "GB", "IT", "SE").
         - "fun_facts": A single string containing 3-4 interesting bullet points about the car's specs (Hp, 0-60, Engine) and quirks/history. Use markdown bullet points.
         
+        CRITICAL: Ensure the JSON is valid. If there are double quotes within the "fun_facts" string (e.g. for engine nicknames), they MUST be escaped with a backslash (\\").
+        
         Example JSON:
         {
           "country_code": "JP",
@@ -53,7 +55,10 @@ serve(async (req) => {
             body: JSON.stringify({
                 contents: [{
                     parts: [{ text: prompt }]
-                }]
+                }],
+                generationConfig: {
+                    response_mime_type: "application/json"
+                }
             })
         });
 
