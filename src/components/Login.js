@@ -29,8 +29,9 @@ const Login = () => {
 
     if (!user) {
         return (
-            <button onClick={loginWithGoogle} style={styles.googleButton}>
-                Sign in with Google
+            <button onClick={loginWithGoogle} className="google-login-button">
+                <span className="google-login-text">Sign in with Google</span>
+                <span className="google-login-text-mobile">Login</span>
             </button>
         );
     }

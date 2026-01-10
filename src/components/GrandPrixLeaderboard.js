@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
+import AdSense from './AdSense';
 
 const GrandPrixLeaderboard = () => {
     const { user } = useAuth();
@@ -10,13 +11,42 @@ const GrandPrixLeaderboard = () => {
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const { data, error } = await supabase
+                // 1. Fetch Leaderboard
+                const { data: leaderboardData, error: leaderboardError } = await supabase
                     .from('weekly_leaderboard')
                     .select('*')
-                    .limit(20); // Top 20
+                    .limit(20);
 
-                if (error) throw error;
-                setLeaders(data || []);
+                if (leaderboardError) throw leaderboardError;
+
+                if (leaderboardData && leaderboardData.length > 0) {
+                    // 2. Fetch Profile Wins for these users
+                    const userIds = leaderboardData.map(l => l.user_id);
+                    const { data: profilesData, error: profilesError } = await supabase
+                        .from('profiles')
+                        .select('id, grand_prix_wins')
+                        .in('id', userIds);
+
+                    if (profilesError) {
+                        console.error("Error fetching profiles:", profilesError);
+                        // Fallback to just leaderboard data if profile fetch fails
+                        setLeaders(leaderboardData);
+                    } else {
+                        // 3. Merge Data
+                        const winsMap = {};
+                        profilesData.forEach(p => {
+                            winsMap[p.id] = p.grand_prix_wins || 0;
+                        });
+
+                        const mergedData = leaderboardData.map(l => ({
+                            ...l,
+                            grand_prix_wins: winsMap[l.user_id] || 0
+                        }));
+                        setLeaders(mergedData);
+                    }
+                } else {
+                    setLeaders([]);
+                }
             } catch (error) {
                 console.error("Error fetching leaderboard:", error);
             } finally {
@@ -100,6 +130,12 @@ const GrandPrixLeaderboard = () => {
                                     <div style={styles.driverInfo}>
                                         <div style={styles.driverName}>
                                             {driver.username || 'Anonymous'}
+                                            {driver.grand_prix_wins > 0 && (
+                                                <span title={`${driver.grand_prix_wins} time past Grand Prix winner`} style={styles.trophyIcon}>
+                                                    🏆
+                                                    {driver.grand_prix_wins > 1 && <span style={styles.winCount}>x{driver.grand_prix_wins}</span>}
+                                                </span>
+                                            )}
                                         </div>
                                         <div style={styles.driverStats}>
                                             {driver.games_played} Races
@@ -121,9 +157,9 @@ const GrandPrixLeaderboard = () => {
                 </div>
             </div>
 
-            {/* Placeholder Ad Container */}
+            {/* Ad Container with AdSense */}
             <div style={styles.adContainer}>
-                ADVERTISEMENT
+                <AdSense slot="1234567890" style={{ width: '100%', height: '100%' }} />
             </div>
         </div>
     );
@@ -132,8 +168,8 @@ const GrandPrixLeaderboard = () => {
 const styles = {
     wrapper: {
         display: 'flex',
-        flexDirection: 'column',
-        gap: '20px'
+        flexDirection: 'column'
+
     },
     towerContainer: {
         width: '280px',
@@ -286,6 +322,16 @@ const styles = {
         color: '#333',
         fontSize: '0.8rem',
         letterSpacing: '2px'
+    },
+    trophyIcon: {
+        marginLeft: '6px',
+        fontSize: '0.9rem',
+        cursor: 'default'
+    },
+    winCount: {
+        fontSize: '0.7rem',
+        color: '#ffd700',
+        marginLeft: '2px'
     }
 };
 

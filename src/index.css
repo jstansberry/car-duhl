@@ -167,14 +167,14 @@ input[type=number] {
 }
 
 .guess-input-model {
-  flex: 2 1 140px;
-  /* Reduced basis */
+  flex: 1.5 1 120px;
+  /* Reduced basis and grow */
   min-width: 0;
 }
 
 .guess-input-year {
-  flex: 0 1 90px;
-  /* Reduced basis */
+  flex: 0.5 1 110px;
+  /* Increased basis and grow */
   min-width: 0;
 }
 
@@ -188,5 +188,199 @@ input[type=number] {
   .guess-input-year {
     flex: 1 1 100%;
     /* Stack fully on mobile */
+  }
+}
+
+/* Header Responsiveness */
+.app-header {
+  width: 100%;
+  background-color: #0f0f0f;
+  border-bottom: 1px solid #333;
+  padding: 10px 0;
+  margin-bottom: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.header-left-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #ffffff;
+  font-weight: bold;
+  letter-spacing: 1px;
+  line-height: 1;
+  transition: font-size 0.3s ease;
+}
+
+.header-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 2px;
+  font-weight: normal;
+  display: block;
+  /* Default: visible */
+}
+
+/* Login Button Styles */
+.google-login-button {
+  background-color: var(--primary-color) !important;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.google-login-text {
+  display: inline;
+}
+
+.google-login-text-mobile {
+  display: none;
+}
+
+/* Mobile Breakpoint */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 5px 0;
+    /* Shrink height */
+    height: 50px;
+    /* approx 40px content + padding */
+  }
+
+  .header-title {
+    font-size: 1.1rem;
+    /* Smaller title */
+  }
+
+  .header-subtitle {
+    display: none;
+    /* Hide subtitle */
+  }
+
+  .google-login-button {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .google-login-text {
+    display: none;
+  }
+
+  .google-login-text-mobile {
+    display: inline;
+  }
+}
+
+/* App Layout */
+.app-wrapper {
+  min-height: 100vh;
+  background-color: #4c4c4c;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 40px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.game-column {
+  flex: 1 1 600px;
+  min-width: 300px;
+  max-width: 650px;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-column {
+  flex: 0 0 auto;
+  margin-top: 20px;
+}
+
+.app-footer {
+  width: 100%;
+  padding: 40px 0 20px 0;
+  margin-top: auto;
+  border-top: 1px solid #333;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.footer-link {
+  color: #888;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+/* Mobile Layout Overrides */
+@media (max-width: 850px) {
+
+  /* Breakpoint where columns wrap */
+  .main-container {
+    gap: 20px;
+    /* Reduce gap from 40px */
+    padding-bottom: 20px;
+  }
+
+  .sidebar-column {
+    margin-top: 0;
+    /* Remove extra top margin when stacked */
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 }
