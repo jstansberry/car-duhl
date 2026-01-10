@@ -622,7 +622,16 @@ const ProofSheet = () => {
                         <div style={styles.metadata}>
                             <strong>ID:</strong> {car.id}<br />
                             <strong>Date:</strong> {car.date}<br />
-                            <strong>Car:</strong> {car.year} {car.make} {car.model}<br />
+                            <strong>Car:</strong> {car.year} {car.make} {car.model}
+                            {car.country && (
+                                <img
+                                    src={`https://flagcdn.com/h20/${car.country.toLowerCase()}.png`}
+                                    alt={car.country}
+                                    title={car.country}
+                                    style={{ marginLeft: '6px', verticalAlign: 'middle', height: '14px' }}
+                                />
+                            )}
+                            <br />
                             <a href={car.imageUrl} target="_blank" rel="noopener noreferrer" style={styles.link}>
                                 Source Image
                             </a>
