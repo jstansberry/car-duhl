@@ -10,10 +10,11 @@ const AdSense = ({ slot, style, format = 'auto', responsive = 'true' }) => {
     }, []);
 
     return (
+
         <ins className="adsbygoogle"
             style={{ display: 'block', ...style }}
-            data-ad-client="ca-pub-YOUR_PUBLISHER_ID" // Placeholder
-            data-ad-slot={slot} // Placeholder or prop
+            data-ad-client="pub-5576980039510742"
+            data-ad-slot="6716244638"
             data-ad-format={format}
             data-full-width-responsive={responsive}
         />
@@ -21,3 +22,5 @@ const AdSense = ({ slot, style, format = 'auto', responsive = 'true' }) => {
 };
 
 export default AdSense;
+
+
