@@ -40,6 +40,7 @@ const ProofSheet = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const [isSaving, setIsSaving] = useState(false);
+    const [isGeneratingHints, setIsGeneratingHints] = useState(false);
 
     // Form states for adding/editing
     const [formData, setFormData] = useState({
@@ -180,7 +181,7 @@ const ProofSheet = () => {
         const makeName = makes.find(m => m.id == formData.make_id)?.name;
         const modelName = models.find(m => m.id == formData.model_id)?.name;
 
-        setIsLoading(true);
+        setIsGeneratingHints(true);
         try {
             const { data, error } = await supabase.functions.invoke('generate-hints', {
                 body: {
@@ -206,7 +207,7 @@ const ProofSheet = () => {
             }
             alert(`Failed to generate hints: ${error.message} \nSee console for details.`);
         } finally {
-            setIsLoading(false);
+            setIsGeneratingHints(false);
         }
     };
 
@@ -358,12 +359,14 @@ const ProofSheet = () => {
 
     return (
         <div style={styles.container}>
-            {isSaving && (
+            {(isSaving || isGeneratingHints) && (
                 <div style={styles.loadingOverlay}>
                     <div style={styles.loadingBox}>
                         <div style={styles.spinner}></div>
-                        <p>Saving & Generating Crops...</p>
-                        <p style={{ fontSize: '0.8rem', color: '#ccc' }}>This may take a few seconds.</p>
+                        <p>{isGeneratingHints ? 'Generating Hints with AI...' : 'Saving & Generating Crops...'}</p>
+                        <p style={{ fontSize: '0.8rem', color: '#ccc' }}>
+                            {isGeneratingHints ? 'This may take upward of 10s.' : 'This may take a few seconds.'}
+                        </p>
                     </div>
                 </div>
             )}
