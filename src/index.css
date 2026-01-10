@@ -218,7 +218,23 @@ input[type=number] {
   align-items: center;
 }
 
+.headerLogo {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  margin-right: 15px;
+  border: 2px solid white;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
 .header-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.header-text {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -370,6 +386,17 @@ input[type=number] {
 @media (max-width: 850px) {
 
   /* Breakpoint where columns wrap */
+  .header-container {
+    height: 50px;
+  }
+
+  .headerLogo {
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+    border-width: 1px;
+  }
+
   .main-container {
     gap: 20px;
     /* Reduce gap from 40px */

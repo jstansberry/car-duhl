@@ -15,7 +15,7 @@ const GrandPrixLeaderboard = () => {
                 const { data: leaderboardData, error: leaderboardError } = await supabase
                     .from('weekly_leaderboard')
                     .select('*')
-                    .limit(20);
+                    .limit(10);
 
                 if (leaderboardError) throw leaderboardError;
 
@@ -153,7 +153,7 @@ const GrandPrixLeaderboard = () => {
                     )}
                 </div>
                 <div style={styles.footer}>
-                    TOP 20
+                    TOP 10
                 </div>
             </div>
 

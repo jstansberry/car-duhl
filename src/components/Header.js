@@ -11,8 +11,11 @@ const Header = () => {
                 {/* Left: Logo/Title */}
                 <a href="/" className="header-left-link">
                     <div className="header-left">
-                        <h1 className="header-title">MY DAILY GARAGE</h1>
-                        <span className="header-subtitle">A new car in your garage every day!</span>
+                        <img src="/google_logo_120.png" alt="My Daily Garage Logo" className="headerLogo" />
+                        <div className="header-text">
+                            <h1 className="header-title">MY DAILY GARAGE</h1>
+                            <span className="header-subtitle">A new car in your garage every day!</span>
+                        </div>
                     </div>
                 </a>
 
