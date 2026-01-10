@@ -4,6 +4,7 @@ import GameContainer from './components/GameContainer';
 import ProofSheet from './components/ProofSheet';
 import GrandPrixLeaderboard from './components/GrandPrixLeaderboard';
 import Header from './components/Header';
+import { Analytics } from '@vercel/analytics/react';
 
 import PrivacyPolicy from './components/PrivacyPolicy';
 
@@ -45,6 +46,8 @@ function App() {
             <Header />
 
             {content}
+
+            <Analytics />
 
             <footer style={styles.footer}>
                 <div style={styles.footerContent}>
