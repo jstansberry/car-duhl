@@ -7,6 +7,7 @@ import Header from './components/Header';
 import { Analytics } from '@vercel/analytics/react';
 
 import PrivacyPolicy from './components/PrivacyPolicy';
+import InfoSection from './components/InfoSection';
 
 function App() {
     const [path, setPath] = React.useState(window.location.pathname);
@@ -46,6 +47,8 @@ function App() {
             <Header />
 
             {content}
+
+            <InfoSection />
 
             <Analytics />
 
