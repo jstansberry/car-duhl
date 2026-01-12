@@ -10,12 +10,12 @@ import Hints from './Hints';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, supabaseUrl } from '../lib/supabaseClient';
 
-const GameContainer = () => {
+const GameContainer = ({ initialDailyCar }) => {
     // Use US Eastern Time (America/New_York) to determine the daily car
     const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
 
-    const [dailyCar, setDailyCar] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [dailyCar, setDailyCar] = useState(initialDailyCar || null);
+    const [loading, setLoading] = useState(!initialDailyCar);
 
     const [guesses, setGuesses] = useState([]);
     const [gameState, setGameState] = useState('playing');
@@ -24,6 +24,13 @@ const GameContainer = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [hintsRevealed, setHintsRevealed] = useState(false);
     const { user } = useAuth();
+
+    // Track if we have already automatically shown the modal for this session/game
+    // to prevent it popping up on every window focus/re-render.
+    const hasAutoShownModal = useRef(false);
+
+    // Track last fetched params to prevent duplicate fetches in Strict Mode
+    const lastFetchedParamsRef = useRef(null);
 
     const prevUserIdRef = useRef(user ? user.id : 'anon');
 
@@ -40,41 +47,67 @@ const GameContainer = () => {
 
     // Fetch Daily Car
     useEffect(() => {
+        const currentUserId = user ? user.id : 'anon';
+
+        // Prevent duplicate fetching (React Strict Mode / fast re-renders)
+        if (lastFetchedParamsRef.current &&
+            lastFetchedParamsRef.current.date === today &&
+            lastFetchedParamsRef.current.userId === currentUserId) {
+            return;
+        }
+
+        lastFetchedParamsRef.current = { date: today, userId: currentUserId };
+
+        // If we already have the correct car (from SSR), don't re-fetch immediately unless date changed
+        if (dailyCar && dailyCar.date === today) {
+            setIsLoaded(true);
+            // We still need to load user progress below, so we continue...
+            // But we can skip the fetchDailyCar part if state is already set.
+            // However, the original logic combined fetching car + fetching user state.
+            // Let's adapt it.
+        }
+
         setIsLoaded(false); // Reset load state when user/date changes to prevent race conditions during fetch
         const fetchDailyCar = async () => {
             try {
-                // Adjust date format if stored differently in DB, but assuming standard YYYY-MM-DD
-                const { data, error } = await supabase
-                    .from('daily_games')
-                    .select(`
-                        *,
-                        make:makes(name),
-                        model:models(name)
-                    `)
-                    .eq('date', today)
-                    .single();
+                let currentCar = dailyCar;
 
-                if (error) {
-                    console.error("Error fetching daily car:", error);
-                    // Fallback or error state?
-                    return;
+                if (!currentCar || currentCar.date !== today) {
+                    const { data, error } = await supabase
+                        .from('daily_games')
+                        .select(`
+                            *,
+                            make:makes(name),
+                            model:models(name)
+                        `)
+                        .eq('date', today)
+                        .single();
+
+                    if (error) {
+                        console.error("Error fetching daily car:", error);
+                        setLoading(false);
+                        return;
+                    }
+
+                    if (data) {
+                        currentCar = {
+                            ...data,
+                            make: data.make.name,
+                            model: data.model.name,
+                            id: data.id,
+                            transformOrigin: data.transform_origin,
+                            maxZoom: data.max_zoom,
+                            country: data.country,
+                            funFacts: data.fun_facts
+                        };
+                        setDailyCar(currentCar);
+                    }
                 }
 
-                if (data) {
-                    // Normalize data to match component expectation
-                    const carData = {
-                        ...data,
-                        make: data.make.name,
-                        model: data.model.name,
-                        // We use dynamic crop URLs now, so we don't need these static proxy URLs in the state
-                        // storing them for reference or fallback if needed, but primary logic will use ID
-                        id: data.id,
-                        transformOrigin: data.transform_origin,
-                        maxZoom: data.max_zoom,
-                        country: data.country,
-                        funFacts: data.fun_facts
-                    };
-                    setDailyCar(carData);
+                if (currentCar) {
+                    const carData = currentCar;
+                    // ... continue with user state logic using carData ...
+
 
                     // Initialize state from local storage AFTER we have the car date/id
                     const userId = user ? user.id : 'anon';
@@ -150,8 +183,15 @@ const GameContainer = () => {
                             if (hasWinningGuess) finalState = 'won';
                         }
 
+                        setIsLoaded(true); // Ensure loaded before showing modal
+
                         setGameState(finalState);
-                        setShowModal(true);
+
+                        // Only auto-show modal if we haven't already
+                        if (!hasAutoShownModal.current) {
+                            setShowModal(true);
+                            hasAutoShownModal.current = true;
+                        }
                     }
                     else if (serverGuesses && serverGuesses.length > 0) {
                         // CASE B: In Progress (Server)
@@ -162,7 +202,12 @@ const GameContainer = () => {
                             const score = calculateScore(serverGuesses);
                             setUserScore(score);
                             setGameState('lost');
-                            setShowModal(true);
+
+                            // Only auto-show modal if we haven't already
+                            if (!hasAutoShownModal.current) {
+                                setShowModal(true);
+                                hasAutoShownModal.current = true;
+                            }
                         } else {
                             setGameState('playing');
                             setShowModal(false);
@@ -177,9 +222,16 @@ const GameContainer = () => {
                         if (parsed.gameState === 'won' || parsed.gameState === 'lost') {
                             // Should have been caught by completedScore check if logged in,
                             // but handles Anon completion or sync issues.
+                            // Should have been caught by completedScore check if logged in,
+                            // but handles Anon completion or sync issues.
                             const recoveredScore = calculateScore(parsed.guesses || []);
                             setUserScore(recoveredScore);
-                            setShowModal(true);
+
+                            // Only auto-show modal if we haven't already
+                            if (!hasAutoShownModal.current) {
+                                setShowModal(true);
+                                hasAutoShownModal.current = true;
+                            }
                         } else {
                             setShowModal(false);
                         }
@@ -201,7 +253,7 @@ const GameContainer = () => {
         };
 
         fetchDailyCar();
-    }, [today, user]);
+    }, [today, user?.id]); // Depend on user.id instead of user object to prevent ref churn
 
 
 
@@ -298,7 +350,10 @@ const GameContainer = () => {
             const finalScore = calculateScore(newGuesses);
             setUserScore(finalScore);
             saveScore(finalScore);
-            setTimeout(() => setShowModal(true), 2500);
+            setTimeout(() => {
+                setShowModal(true);
+                hasAutoShownModal.current = true;
+            }, 2500);
         }
         // Check Loss
         else if (newGuesses.length >= 5) {
@@ -306,7 +361,10 @@ const GameContainer = () => {
             const finalScore = calculateScore(newGuesses);
             setUserScore(finalScore);
             saveScore(finalScore);
-            setTimeout(() => setShowModal(true), 2500);
+            setTimeout(() => {
+                setShowModal(true);
+                hasAutoShownModal.current = true;
+            }, 2500);
         }
     };
 

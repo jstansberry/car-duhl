@@ -10,6 +10,9 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [profileLoaded, setProfileLoaded] = useState(false);
 
+    // Ref to prevent duplicate profile fetches
+    const fetchingProfileRef = React.useRef(null);
+
     useEffect(() => {
         let mounted = true;
 
@@ -76,6 +79,9 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const fetchProfile = async (userId) => {
+        if (fetchingProfileRef.current === userId) return; // Already fetching/fetched for this user
+        fetchingProfileRef.current = userId;
+
         try {
             const { data, error } = await supabase
                 .from('profiles')

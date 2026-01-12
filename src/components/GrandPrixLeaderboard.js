@@ -5,21 +5,18 @@ import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import AdSense from './AdSense';
 
-const GrandPrixLeaderboard = () => {
+const GrandPrixLeaderboard = ({ initialLeaderboard }) => {
     const { user } = useAuth();
-    const [leaders, setLeaders] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [leaders, setLeaders] = useState(initialLeaderboard || []);
+    const [loading, setLoading] = useState(!initialLeaderboard);
 
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                // 1. Fetch Leaderboard
                 const { data: leaderboardData, error: leaderboardError } = await supabase
                     .from('weekly_leaderboard')
                     .select('*')
                     .limit(10);
-
-                if (leaderboardError) throw leaderboardError;
 
                 if (leaderboardError) throw leaderboardError;
 
@@ -31,7 +28,9 @@ const GrandPrixLeaderboard = () => {
             }
         };
 
-        fetchLeaderboard();
+        if (!initialLeaderboard) {
+            fetchLeaderboard();
+        }
 
         // Refresh every minute
         const interval = setInterval(fetchLeaderboard, 60000);
