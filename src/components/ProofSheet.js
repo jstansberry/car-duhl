@@ -19,6 +19,21 @@ const ProofSheet = () => {
         }
     }, [isAdmin, authLoading, profileLoaded, router]);
 
+    // Inject spinner animation styles on mount
+    useEffect(() => {
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        `;
+        document.head.appendChild(styleSheet);
+        return () => {
+            document.head.removeChild(styleSheet);
+        };
+    }, []);
+
 
 
     // All puzzles
@@ -1022,13 +1037,7 @@ const styles = {
 };
 
 // Add keyframes for spinner
-const styleSheet = document.createElement("style");
-styleSheet.innerText = `
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-`;
-document.head.appendChild(styleSheet);
+// Add keyframes for spinner
+// Styles injected via useEffect to avoid SSR reference error
 
 export default ProofSheet;

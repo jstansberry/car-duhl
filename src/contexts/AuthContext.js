@@ -141,12 +141,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={value}>
-            {loading ? (
-                <div style={styles.loadingContainer}>
-                    <h3>App Loading...</h3>
-                    <p style={styles.loadingText}>Connecting to game server...</p>
-                </div>
-            ) : children}
+            {children}
         </AuthContext.Provider>
     );
 };
