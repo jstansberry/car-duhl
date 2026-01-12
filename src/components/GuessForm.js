@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
 const GuessForm = ({ onGuess, gameState, onViewResults, solved = {}, correctValues = {}, currentGuessCount = 0 }) => {
@@ -8,9 +8,13 @@ const GuessForm = ({ onGuess, gameState, onViewResults, solved = {}, correctValu
 
     const [makes, setMakes] = useState([]);
     const [availableModels, setAvailableModels] = useState([]);
+    const makesFetchedRef = useRef(false);
 
     // Fetch Makes on initial load
     useEffect(() => {
+        if (makesFetchedRef.current) return;
+        makesFetchedRef.current = true;
+
         const fetchMakes = async () => {
             const { data, error } = await supabase
                 .from('makes')
