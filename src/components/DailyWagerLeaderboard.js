@@ -113,7 +113,6 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         maxHeight: '600px', // arbitrary height limit
-        marginTop: '20px'
     },
     towerHeader: {
         backgroundColor: '#e94560',

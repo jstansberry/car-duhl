@@ -114,7 +114,8 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
                 user_id: user.id,
                 auction_id: auction.id,
                 bid_amount: bidAmount,
-                reserve_not_met: reserveNotMet
+                reserve_not_met: reserveNotMet,
+                updated_at: new Date().toISOString()
             };
 
             let error;
@@ -282,12 +283,12 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
                     <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem', color: '#ccc' }}>
                         Your Bid ($):
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
                         <div style={{
-                            flex: 1,
                             position: 'relative',
                             display: 'flex',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            width: '150px'
                         }}>
                             <span style={{
                                 position: 'absolute',
@@ -305,7 +306,7 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
                                 placeholder="0"
                                 style={{
                                     width: '100%',
-                                    padding: '12px 10px 12px 25px',
+                                    padding: '10px 10px 10px 25px',
                                     background: '#222',
                                     border: '1px solid #444',
                                     borderRadius: '8px',
@@ -316,6 +317,19 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
                                 }}
                             />
                         </div>
+
+                        {initialGuess && (
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <span style={{ fontSize: '0.8rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                    Bid placed on
+                                </span>
+                                <span style={{ fontSize: '0.9rem', color: '#ccc', fontWeight: 'bold' }}>
+                                    {new Date(initialGuess.updated_at || initialGuess.created_at).toLocaleString('en-US', {
+                                        month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+                                    })}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
