@@ -4,38 +4,44 @@ const InfoSection = () => {
     return (
         <section style={styles.container}>
             <div style={styles.content}>
-                <h1 style={styles.title}>My Daily Garage: The Ultimate Daily Car Guessing Game</h1>
+                <h1 style={styles.title}>My Daily Garage: The Ultimate Daily Car Games</h1>
 
                 <div style={styles.block}>
                     <p style={styles.text}>
-                        Welcome to <strong>My Daily Garage</strong>, the premier daily challenge for automotive enthusiasts and car spotters alike.
-                        Every day, we feature a new vehicle from automotive history—ranging from classic muscle cars and vintage roadsters to modern supercars and obscure JDM legends.
+                        Welcome to <strong>My Daily Garage</strong>, the ultimate destination for automotive enthusiasts.
+                        We offer a <strong>suite of games oriented around car culture</strong>, designed to test your knowledge and market intuition.
+                        From visual identification in "The Grand Prix" to valuation skills in "The Daily Wager", there is a challenge for every gearhead.
                     </p>
                 </div>
 
                 <div style={styles.block}>
-                    <h2 style={styles.heading}>How to Play</h2>
+                    <h2 style={styles.heading}>Our Mission</h2>
+                    <p style={styles.text}>
+                        My Daily Garage is more than just a game—it’s a celebration of automotive history and culture.
+                        Our goal is to get people excited about the stories behind the machines, educating players on the
+                        <strong> facts, figures, and rare models</strong> that have shaped the industry.
+                    </p>
+                </div>
+
+                <div style={styles.block}>
+                    <h2 style={styles.heading}>Explore Car Culture</h2>
+                    <p style={styles.text}>
+                        From the ever-changing valuations of collector cars to the engineering marvels of the past century,
+                        we highlight <strong>exceptional examples</strong> of vehicles that were influential in the global market.
+                        Whether you are tracking market trends or admiring design evolution, there is always something new to learn.
+                    </p>
                     <ul style={styles.list}>
-                        <li style={styles.listItem}><strong>Guess the Car:</strong> You have 5 attempts to identify the Make, Model, and Year of the daily vehicle.</li>
-                        <li style={styles.listItem}><strong>Visual Clues:</strong> Each game starts with a zoomed-in crop of a distinctive feature—a headlight, a fender vent, or a wheel arch.</li>
-                        <li style={styles.listItem}><strong>Progressive Reveals:</strong> With each incorrect guess, the image zooms out, revealing more of the car to help you narrow down the answer.</li>
-                        <li style={styles.listItem}><strong>Feedback System:</strong> Our smart feedback system tells you if you got the Make, Model, or Year correct (Green) or incorrect (Red) after each submission.</li>
+                        <li style={styles.listItem}>Discover influential models from every era.</li>
+                        <li style={styles.listItem}>Understand the "why" behind vehicle valuations.</li>
+                        <li style={styles.listItem}>Test your knowledge of obscure statistics and design details.</li>
                     </ul>
                 </div>
 
                 <div style={styles.block}>
-                    <h2 style={styles.heading}>Why Play My Daily Garage?</h2>
+                    <h3 style={styles.subHeading}>A Suite of Automotive Challenges</h3>
                     <p style={styles.text}>
-                        Whether you are studying for a car spotting competition or just love cars, My Daily Garage offers a fun, low-pressure way to test your knowledge.
-                        Learn about production years, obscure models, and design evolutions. From the curves of a 1960s Ferrari to the sharp angles of 1980s boxy sedans, our diverse database covers it all.
-                    </p>
-                </div>
-
-                <div style={styles.block}>
-                    <h3 style={styles.subHeading}>Sharpen Your Automotive Knowledge</h3>
-                    <p style={styles.text}>
-                        Can you distinguish a 1969 Camaro from a 1968 based on the side marker lights? Do you know the difference between a Porsche 996 and 997 headlight?
-                        My Daily Garage challenges you to look closer at the details that define automotive design.
+                        We offer a variety of games designed to test different aspects of your gearhead knowledge.
+                        Whether it’s visual identification or market price prediction, My Daily Garage is the ultimate playground for car lovers.
                     </p>
                 </div>
 

@@ -10,9 +10,14 @@ const HelpModal = ({ onClose }) => {
 
                 <div style={styles.scrollContainer}>
                     <div style={styles.section}>
-                        <h3 style={styles.sectionTitle}>How to Play</h3>
-                        <p>Guess the daily car in 5 attempts or less.</p>
-
+                        <h3 style={styles.sectionTitle}>The Grand Prix</h3>
+                        <p>The Grand Prix is our weekly competition. Guess the car in 5 attempts</p>
+                        <ul>
+                            <li><strong>Schedule:</strong> Runs from Monday to Sunday.</li>
+                            <li><strong>Objective:</strong> Accumulate the highest total score over the week.</li>
+                            <li><strong>Winner:</strong> The driver with the most points on Sunday night takes the podium!</li>
+                        </ul>
+                        <p>Login is required to participate in the leaderboard.</p>
                         <h4>The Clues</h4>
                         <ul>
                             <li><strong>Start (Guess #1):</strong> You get a tiny, zoomed-in detail of the car.</li>
@@ -35,14 +40,20 @@ const HelpModal = ({ onClose }) => {
                     <div style={styles.divider} />
 
                     <div style={styles.section}>
-                        <h3 style={styles.sectionTitle}>The Grand Prix</h3>
-                        <p>The Grand Prix is our weekly competition.</p>
+                        <h3 style={styles.sectionTitle}>The Daily Wager</h3>
+                        <p>Predict the final sale price of real automotive auctions.</p>
                         <ul>
-                            <li><strong>Schedule:</strong> Runs from Monday to Sunday.</li>
-                            <li><strong>Objective:</strong> Accumulate the highest total score over the week.</li>
-                            <li><strong>Winner:</strong> The driver with the most points on Sunday night takes the podium!</li>
+                            <li><strong>Objective:</strong> Guess the closest final bid amount.</li>
+                            <li><strong>Reserve Logic:</strong>
+                                <ul>
+                                    <li>For <strong>No Reserve</strong> auctions, the car always sells.</li>
+                                    <li>For <strong>Reserve</strong> auctions, you must correctly predict if the car will sell ("Meets Reserve") or not ("Reserve Not Met"). If you guess this outcome wrong, your bid is disqualified!</li>
+                                </ul>
+                            </li>
+                            <li><strong>Scheduling:</strong> You can only wager on the outcome up to 48 hours before the auction is scheduled to end. You may not change your wager within 48 hours of auction end also.</li>
+                            <li><strong>Winning:</strong> The player with the correct Reserve prediction and the price closest to the final bid wins.</li>
+                            <li><strong>Tie-Breaker:</strong> If two guesses are equally close, the lower guess wins. If still tied, the earlier guess wins.</li>
                         </ul>
-                        <p>Login is required to participate in the leaderboard.</p>
                     </div>
                 </div>
             </div>

@@ -92,7 +92,7 @@ const DailyWagerPage = () => {
 
     return (
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
-            <h1 style={{ textAlign: 'center', marginBottom: '40px', fontSize: '2.5rem' }}>The Daily Wager</h1>
+
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px' }}>
                 {/* Main Column: Auctions */}
