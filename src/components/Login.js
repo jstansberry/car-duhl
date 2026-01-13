@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import PastGamesModal from './PastGamesModal';
+import LoginModal from './LoginModal';
 
 const Login = () => {
     const { user, loginWithGoogle, logout, isAdmin, profile } = useAuth();
+    const [showLoginModal, setShowLoginModal] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [showPastGames, setShowPastGames] = useState(false);
     const dropdownRef = useRef(null);
@@ -29,10 +31,12 @@ const Login = () => {
 
     if (!user) {
         return (
-            <button onClick={loginWithGoogle} className="google-login-button">
-                <span className="google-login-text">Sign in with Google</span>
-                <span className="google-login-text-mobile">Login</span>
-            </button>
+            <>
+                <button onClick={() => setShowLoginModal(true)} className="google-login-button">
+                    Login
+                </button>
+                {showLoginModal && <div style={{ position: 'absolute', zIndex: 1000 }}><LoginModal onClose={() => setShowLoginModal(false)} /></div>}
+            </>
         );
     }
 

@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Login from './Login';
 import HelpModal from './HelpModal';
 
+import GameSwitcher from './GameSwitcher';
+
 const Header = () => {
     const [showHelp, setShowHelp] = useState(false);
 
@@ -24,6 +26,7 @@ const Header = () => {
 
                 {/* Right: Help & User Menu */}
                 <div className="header-right">
+                    <GameSwitcher />
                     <button
                         style={{
                             width: '32px',

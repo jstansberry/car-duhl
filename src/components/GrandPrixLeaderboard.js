@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import AdSense from './AdSense';
 
 const GrandPrixLeaderboard = ({ initialLeaderboard }) => {
     const { user } = useAuth();
+    const pathname = usePathname();
     const [leaders, setLeaders] = useState(initialLeaderboard || []);
     const [loading, setLoading] = useState(!initialLeaderboard);
 
@@ -143,7 +145,7 @@ const GrandPrixLeaderboard = ({ initialLeaderboard }) => {
 
             {/* Ad Container with AdSense */}
             <div style={styles.adContainer}>
-                <AdSense slot="1234567890" style={{ width: '100%', height: '100%' }} />
+                <AdSense key={pathname} slot="1234567890" style={{ width: '100%', height: '100%' }} />
             </div>
         </div>
     );

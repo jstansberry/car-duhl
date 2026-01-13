@@ -1,5 +1,5 @@
-import ProofSheet from '../../components/ProofSheet';
+import AdminDashboard from '../../components/AdminDashboard';
 
 export default function Page() {
-    return <ProofSheet />;
+    return <AdminDashboard />;
 }
