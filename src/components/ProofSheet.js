@@ -792,12 +792,14 @@ const styles = {
     formRow: {
         display: 'flex',
         gap: '20px',
+        flexWrap: 'wrap', // Enable wrapping for mobile
     },
     field: {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        gap: '8px'
+        gap: '8px',
+        minWidth: '200px', // Ensure fields don't get too squashed before wrapping
     },
     label: {
         fontSize: '0.9rem',
@@ -962,7 +964,9 @@ const styles = {
         backgroundColor: 'rgba(255, 255, 255, 0.05)',
         padding: '15px',
         borderRadius: '8px',
-        border: '1px solid rgba(255, 255, 255, 0.1)'
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        flexWrap: 'wrap', // Enable wrapping for mobile
+        justifyContent: 'center'
     },
     filterField: {
         display: 'flex',
