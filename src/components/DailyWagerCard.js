@@ -221,8 +221,13 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
                         })() : 'Unknown'} <br />
                         <strong>Winning Guess:</strong> {formatCurrency(winnerData?.winning_bid)} <br />
                         <span style={{ fontSize: '0.9rem', color: '#aaa' }}>
-                            (Actual Price: {formatCurrency(auction.final_price)})
+                            (Final Bid: {formatCurrency(auction.final_price)})
                         </span>
+                        {auction.status === 'settled' && auction.is_reserve && (
+                            <div style={{ marginTop: '5px', fontSize: '0.9rem', fontWeight: 'bold', color: auction.reserve_met ? '#4CAF50' : '#e94560' }}>
+                                {auction.reserve_met ? "RESERVE MET (SOLD)" : "RESERVE NOT MET (NOT SOLD)"}
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -254,7 +259,8 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
                                     padding: '5px 15px',
                                     cursor: isLocked ? 'not-allowed' : 'pointer',
                                     fontWeight: 'bold',
-                                    transition: 'all 0.2s'
+                                    transition: 'all 0.2s',
+                                    margin: '5px'
                                 }}
                             >
                                 YES
@@ -270,7 +276,8 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
                                     padding: '5px 15px',
                                     cursor: isLocked ? 'not-allowed' : 'pointer',
                                     fontWeight: 'bold',
-                                    transition: 'all 0.2s'
+                                    transition: 'all 0.2s',
+                                    margin: '5px'
                                 }}
                             >
                                 NO
@@ -281,7 +288,7 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
 
                 <div>
                     <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem', color: '#ccc' }}>
-                        Your Bid ($):
+                        Final Bid Guess ($):
                     </label>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
                         <div style={{
@@ -321,7 +328,7 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
                         {initialGuess && (
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                 <span style={{ fontSize: '0.8rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                    Bid placed on
+                                    Guess made on
                                 </span>
                                 <span style={{ fontSize: '0.9rem', color: '#ccc', fontWeight: 'bold' }}>
                                     {new Date(initialGuess.updated_at || initialGuess.created_at).toLocaleString('en-US', {
