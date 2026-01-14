@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 
-const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGuessSubmit }) => {
+const DailyWagerCard = React.memo(({ auction, userGuessId, initialGuess, winnerData, onGuessSubmit }) => {
     const { user } = useAuth();
 
     // Timer State
@@ -19,9 +19,7 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
     const [reserveNotMet, setReserveNotMet] = useState(initialGuess?.reserve_not_met ?? false);
     const [submitting, setSubmitting] = useState(false);
 
-    // Winner Info (fetched if ended)
-    const [winnerName, setWinnerName] = useState(null);
-    const [winningBid, setWinningBid] = useState(null);
+
 
     // Update bid amount if initial guess changes (e.g. after fresh fetch)
     useEffect(() => {
@@ -38,11 +36,11 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
             const end = new Date(auction.auction_end_time);
             const diff = end - now;
 
-            if (diff <= 0) {
+            if (diff <= 0 || auction.status === 'settled') {
                 setIsEnded(true);
                 setIsLocked(true);
                 setTimeLeft("Auction Ended");
-                return;
+                return true; // Return signal to clear interval
             }
 
             const fortyEightHoursMs = 48 * 60 * 60 * 1000;
@@ -74,21 +72,18 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
             }
         };
 
-        calculateTime();
-        const interval = setInterval(calculateTime, 1000);
+        const shouldStop = calculateTime();
+        if (shouldStop) return;
+
+        const interval = setInterval(() => {
+            const stop = calculateTime();
+            if (stop) clearInterval(interval);
+        }, 1000);
+
         return () => clearInterval(interval);
-    }, [auction.auction_end_time]);
+    }, [auction.auction_end_time, auction.status]);
 
-    useEffect(() => {
-        if (auction.status === 'settled' && auction.winner_user_id) {
-            fetchWinner(auction.winner_user_id);
-        }
-    }, [auction]);
 
-    const fetchWinner = async (userId) => {
-        const { data } = await supabase.from('profiles').select('username').eq('id', userId).single();
-        if (data) setWinnerName(data.username);
-    };
 
     const formatDuration = (ms) => {
         if (ms < 0) ms = 0;
@@ -166,6 +161,8 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
                         src={auction.cover_image_url}
                         alt={auction.title || "Auction Car"}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        loading="lazy"
+                        decoding="async"
                     />
                 </a>
                 <div style={{
@@ -373,6 +370,6 @@ const DailyWagerCard = ({ auction, userGuessId, initialGuess, winnerData, onGues
             </div>
         </div>
     );
-};
+});
 
 export default DailyWagerCard;

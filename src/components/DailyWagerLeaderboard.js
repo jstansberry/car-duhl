@@ -77,9 +77,6 @@ const DailyWagerLeaderboard = () => {
                                             return player.username;
                                         })()}
                                     </div>
-                                    <div style={styles.driverStats}>
-                                        Daily Wager Player
-                                    </div>
                                 </div>
                                 <div style={{
                                     ...styles.pointsBox,

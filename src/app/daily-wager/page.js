@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { useAuth } from '../../contexts/AuthContext';
 import DailyWagerCard from '../../components/DailyWagerCard';
@@ -53,7 +53,7 @@ const DailyWagerPage = () => {
         }
     };
 
-    const fetchUserGuesses = async () => {
+    const fetchUserGuesses = useCallback(async () => {
         if (!user || auctions.length === 0) return;
 
         try {
@@ -74,7 +74,7 @@ const DailyWagerPage = () => {
         } catch (error) {
             console.error("Error loading guesses:", error);
         }
-    };
+    }, [user, auctions]);
 
     // Load auctions once on mount
     useEffect(() => {
@@ -84,11 +84,11 @@ const DailyWagerPage = () => {
     // Load guesses when user or auctions change
     useEffect(() => {
         fetchUserGuesses();
-    }, [user, auctions]);
+    }, [fetchUserGuesses]);
 
-    const handleGuessSubmit = () => {
+    const handleGuessSubmit = useCallback(() => {
         fetchUserGuesses();
-    };
+    }, [fetchUserGuesses]);
 
     return (
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
