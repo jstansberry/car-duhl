@@ -9,7 +9,7 @@ export default function DrivingBlindPage() {
     // Game State
     const [gameState, setGameState] = useState('playing'); // playing, won, lost
     const [gasTank, setGasTank] = useState(100); // 100% full
-    const MAX_TURNS = 20;
+    const MAX_TURNS = 12;
 
 
 
@@ -118,6 +118,25 @@ export default function DrivingBlindPage() {
 
 
 
+    // Auto-scroll ref
+    const chatWindowRef = React.useRef(null);
+    // Input ref
+    const inputRef = React.useRef(null);
+
+    // Auto-scroll effect
+    useEffect(() => {
+        if (chatWindowRef.current) {
+            chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+        }
+    }, [messages, isLoading]);
+
+    // Auto-focus effect
+    useEffect(() => {
+        if (!isLoading && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [isLoading]);
+
     const onGuess = async ({ make, model, year }) => {
         // Here we would verify against the daily car. 
         // BUT, the client doesn't know the daily car! 
@@ -165,16 +184,8 @@ export default function DrivingBlindPage() {
                 <p style={styles.subHeader}>Guess the car before you run out of gas!</p>
             </div>
 
-            {/* Gas Gauge */}
-            <div style={styles.gaugeContainer}>
-                <div style={styles.gaugeLabel}>GAS TANK</div>
-                <div style={styles.gaugeBar}>
-                    <div style={{ ...styles.gaugeFill, width: `${gasTank}%`, backgroundColor: gasTank < 20 ? 'red' : '#4caf50' }} />
-                </div>
-            </div>
-
             {/* Chat Area */}
-            <div style={styles.chatWindow}>
+            <div style={styles.chatWindow} ref={chatWindowRef}>
                 {messages.map(m => (
                     <div key={m.id} style={{
                         ...styles.messageRow,
@@ -192,7 +203,6 @@ export default function DrivingBlindPage() {
                     </div>
                 ))}
                 {isLoading && <div style={styles.loading}>I'm thinking...</div>}
-
             </div>
 
             {/* Input Area */}
@@ -207,6 +217,7 @@ export default function DrivingBlindPage() {
                         handleMessageSubmit(e);
                     }} style={styles.chatForm}>
                         <input
+                            ref={inputRef}
                             className="chat-input"
                             value={input}
                             onChange={handleInputChange}
@@ -224,6 +235,14 @@ export default function DrivingBlindPage() {
                         {gasTank <= 0 ? "OUT OF GAS!" : "GAME OVER"}
                     </div>
                 )}
+            </div>
+
+            {/* Gas Gauge */}
+            <div style={styles.gaugeContainer}>
+                <div style={styles.gaugeLabel}>GAS TANK</div>
+                <div style={styles.gaugeBar}>
+                    <div style={{ ...styles.gaugeFill, width: `${gasTank}%`, backgroundColor: gasTank < 20 ? 'red' : '#4caf50' }} />
+                </div>
             </div>
 
             {/* Guess Form Area */}
@@ -280,7 +299,7 @@ const styles = {
         transition: 'width 0.5s ease',
     },
     chatWindow: {
-        minHeight: '275px',
+        height: '400px',
         overflowY: 'auto',
         background: 'rgba(255,255,255,0.05)',
         borderRadius: '12px',
