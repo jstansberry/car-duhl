@@ -243,7 +243,7 @@ const styles = {
     },
     loginPrompt: {
         padding: '10px',
-        backgroundColor: 'rgb(152 233 247)', // Cyan as requested
+        backgroundColor: 'rgb(152 233 247)',
         color: '#000',
         textAlign: 'center',
         fontSize: '0.9rem',

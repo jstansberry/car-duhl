@@ -252,7 +252,7 @@ const DailyWagerAdmin = () => {
                         required
                         style={{ padding: '8px', borderRadius: '4px', border: '1px solid #444', background: '#222', color: '#fff' }}
                     />
-                    <label style={{ display: 'flex', flexDirection: 'column', color: '#ccc', fontSize: '0.9rem' }}>
+                    <label style={{ display: 'flex', flexDirection: 'column', color: '#000', fontSize: '0.9rem' }}>
                         Auction End Time
                         <input
                             type="datetime-local"
@@ -262,7 +262,7 @@ const DailyWagerAdmin = () => {
                             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #444', background: '#222', color: '#fff', marginTop: '5px' }}
                         />
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#fff' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#000' }}>
                         <input
                             type="checkbox"
                             checked={formData.is_reserve}
@@ -274,7 +274,7 @@ const DailyWagerAdmin = () => {
                     <div style={{ marginTop: '10px', borderTop: '1px solid #444', paddingTop: '10px' }}>
                         <h4 style={{ margin: '0 0 10px 0', color: '#e94560' }}>Settlement (Optional)</h4>
                         <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>
-                            <label style={{ display: 'flex', flexDirection: 'column', color: '#ccc', fontSize: '0.9rem' }}>
+                            <label style={{ display: 'flex', flexDirection: 'column', color: '#000', fontSize: '0.9rem' }}>
                                 Final Price
                                 <input
                                     type="number"
@@ -318,7 +318,7 @@ const DailyWagerAdmin = () => {
                         <div style={{ flex: 1 }}>
                             <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>{item.title || 'Untitled'}</div>
                             <div style={{ fontWeight: 'bold' }}>Ends: {new Date(item.auction_end_time).toLocaleString()}</div>
-                            <div style={{ fontSize: '0.9rem', color: '#aaa' }}>
+                            <div style={{ fontSize: '0.9rem', color: '#000' }}>
                                 Status: {item.status.toUpperCase()} |
                                 Reserve: {item.is_reserve ? 'YES' : 'NO'}
                                 {item.status === 'settled' && item.is_reserve && (

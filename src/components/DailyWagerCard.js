@@ -324,7 +324,7 @@ const DailyWagerCard = React.memo(({ auction, userGuessId, initialGuess, winnerD
 
                         {initialGuess && (
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <span style={{ fontSize: '0.8rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                <span style={{ fontSize: '0.8rem', color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                     Guess made on
                                 </span>
                                 <span style={{ fontSize: '0.9rem', color: '#ccc', fontWeight: 'bold' }}>
