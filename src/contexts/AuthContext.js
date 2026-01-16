@@ -106,7 +106,8 @@ export const AuthProvider = ({ children }) => {
                 options: {
                     redirectTo: window.location.origin,
                     queryParams: {
-                        access_type: 'offline'
+                        access_type: 'offline',
+                        prompt: 'select_account'
                     }
                 }
             });

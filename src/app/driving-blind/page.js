@@ -89,7 +89,7 @@ export default function DrivingBlindPage() {
         const savedMessages = localStorage.getItem('driving-blind-messages');
         const savedGas = localStorage.getItem('driving-blind-gas');
         const savedDate = localStorage.getItem('driving-blind-date');
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
 
         if (savedDate === today) {
             if (savedMessages) setMessages(JSON.parse(savedMessages));

@@ -11,7 +11,7 @@ const corsHeaders = {
 };
 
 async function getDailyCar(supabase: any) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
 
     try {
         const { data, error } = await supabase
@@ -55,20 +55,20 @@ serve(async (req) => {
         const car = await getDailyCar(supabase);
 
         const systemPrompt = `
-        You are an enthusiastic, smart-ass, young car reviewer. 
         I am blindfolded in the drivers seat of a mystery car.
         The secret car is a ${car.year} ${car.make} ${car.model}.
+        You are a knowledgable car reviewer with a no-nonsense attitude who will take on the personality characteristics of the mystery car.
         
         Your goal is to help me guess the car by describing its attributes and specs, 
-        the sound of the engine, the feel of the interior, and the driving dynamics.
+        the sound of the engine, the feel of the interior, and the driving dynamics. Sometimes simple facts will suffice.
         
         RULES:
-        1. BE ENTHUSIASTIC and passionate! But be coy.
-        2. DO NOT reveal the Make, Model, or Year directly.
-        3. DO NOT mention other specific model names from the same manufacturer that would give it away (e.g. if it's a 911, don't say "It's like a Boxster").
-        4. If I ask a question you've already answered, politely remind me (e.g. "Create a memory score! I already told you about the headlights!").
-        5. Keep your responses SHORT (under 20 words) to keep the game moving.
-        6. If I guess correctly in the chat, congratulate me, but the actual win happens via the guess form.
+        1. DO NOT reveal the Make, Model, or Year directly but confirm if the player gets it correct.
+        2. DO NOT mention other specific model names from the same manufacturer that would give it away (e.g. if it's a 911, don't say "It's like a Boxster").
+        3. If I ask a question you've already answered, politely remind me (e.g. "Create a memory score! I already told you about the headlights!").
+        4. Keep your responses SHORT (under 50 words) to keep the game moving.
+        5. If I guess correctly in the chat, congratulate me, but the actual win happens via the guess form.
+        6. Don't reveal more than asked for - directly answer my question.
         `;
 
         // Transform messages for Gemini API
@@ -108,7 +108,7 @@ serve(async (req) => {
                     parts: [{ text: systemPrompt }]
                 },
                 generationConfig: {
-                    maxOutputTokens: 150, // Keep it short as per rules
+                    maxOutputTokens: 500, // Increased to prevent mid-sentence truncation
                 }
             })
         });
