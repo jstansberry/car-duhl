@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 // import { useChat } from '@ai-sdk/react'; // Removing to use custom fetch
 import { supabase, supabaseUrl, supabaseAnonKey } from '../../lib/supabaseClient';
-import GuessForm from '../../components/GuessForm';
+
 
 export default function DrivingBlindPage() {
     // Game State
@@ -43,15 +43,21 @@ export default function DrivingBlindPage() {
                 throw new Error(`Server error: ${response.status}`);
             }
 
-            // Expecting plain text response from Edge Function
-            const text = await response.text();
+            // Expecting JSON response from Edge Function
+            const data = await response.json();
 
             // Append AI response
             setMessages(prev => [...prev, {
                 id: Date.now().toString(),
                 role: 'assistant',
-                content: text
+                content: data.response
             }]);
+
+            // Check for win
+            if (data.won) {
+                setGameState('won');
+                // You could trigger confetti here or other effects
+            }
 
             // Callback logic for gas tank
             setGasTank(prev => Math.max(0, prev - (100 / MAX_TURNS)));
@@ -137,46 +143,6 @@ export default function DrivingBlindPage() {
         }
     }, [isLoading]);
 
-    const onGuess = async ({ make, model, year }) => {
-        // Here we would verify against the daily car. 
-        // BUT, the client doesn't know the daily car! 
-        // We typically need to verify on the server OR fetch the answer hash.
-        // For this prototype, we'll verify via a server action or API call?
-        // Or simpler: The API route *could* return the answer in a hidden header or we verify via a new API endpoint.
-        // Let's create a quick verification endpoint or just mock it for now.
-        // Wait, 'getDailyCar' is in the API route. I need to expose a way to check the answer.
-        // I'll add a 'check-answer' query param to the chat route or a separate route.
-        // Let's assume we make a separate call.
-
-        // For now, I'll just Alert "Submitted" because I haven't built the verification API yet.
-        // Actually, I should probably build a '/api/check-answer' route.
-        // Check Task List: "Verify Statefulness" - but I need to verifying guesses.
-        // I will add a TODO for verification and implement a basic client-side check if I can get the car data.
-
-        // BETTER: When the component mounts, fetch the *hashed* answer or similar? 
-        // No, keep it secret.
-
-        try {
-            const response = await fetch('/api/driving-blind/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ make, model, year })
-            });
-            const result = await response.json();
-
-            if (result.correct) {
-                setGameState('won');
-                setMessages(prev => [...prev, { id: 'win', role: 'assistant', content: `VICTORY! You guessed it! It WAS the ${year} ${make} ${model}!` }]);
-            } else {
-                setMessages(prev => [...prev, { id: Date.now(), role: 'assistant', content: `WRONG! It is NOT a ${year} ${make} ${model}. Keep guessing!` }]);
-                // Maybe penalty on gas?
-                setGasTank(prev => Math.max(0, prev - 10));
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    };
-
     return (
         <div style={styles.container}>
             <div style={styles.header}>
@@ -197,17 +163,24 @@ export default function DrivingBlindPage() {
                             borderBottomRightRadius: m.role === 'user' ? 0 : 12,
                             borderBottomLeftRadius: m.role === 'assistant' ? 0 : 12,
                         }}>
+                            {/* Filter out JSON artifacts if any slipped through legacy state */}
                             {m.role === 'assistant' && <span style={styles.avatar}>🚙 </span>}
-                            {m.content}
+                            {typeof m.content === 'object' ? m.content.response : m.content}
                         </div>
                     </div>
                 ))}
                 {isLoading && <div style={styles.loading}>I'm thinking...</div>}
             </div>
 
-            {/* Input Area */}
+            {/* Input Area / Victory Area */}
             <div style={styles.inputArea}>
-                {gameState === 'playing' && gasTank > 0 ? (
+                {gameState === 'won' ? (
+                    <div style={styles.victory}>
+                        <h3>VICTORY!</h3>
+                        <p>You correctly guessed the car!</p>
+                        <button onClick={() => window.location.reload()} style={styles.playAgainButton}>Play Again Tomorrow</button>
+                    </div>
+                ) : gameState === 'playing' && gasTank > 0 ? (
                     <form onSubmit={(e) => {
                         if ((input || '').length > 100) {
                             e.preventDefault();
@@ -243,16 +216,6 @@ export default function DrivingBlindPage() {
                 <div style={styles.gaugeBar}>
                     <div style={{ ...styles.gaugeFill, width: `${gasTank}%`, backgroundColor: gasTank < 20 ? 'red' : '#4caf50' }} />
                 </div>
-            </div>
-
-            {/* Guess Form Area */}
-            <div style={styles.guessSection}>
-                <h3>Ready to Guess?</h3>
-                <GuessForm
-                    onGuess={onGuess}
-                    gameState={gameState === 'won' ? 'won' : 'playing'}
-                    currentGuessCount={0} // We can track guesses if we want
-                />
             </div>
         </div>
     );
@@ -357,6 +320,23 @@ const styles = {
         marginTop: '20px',
         borderTop: '1px solid #333',
         paddingTop: '20px',
+    },
+    victory: {
+        textAlign: 'center',
+        padding: '20px',
+        background: '#4caf50',
+        borderRadius: '8px',
+        fontWeight: 'bold',
+    },
+    playAgainButton: {
+        marginTop: '10px',
+        padding: '10px 20px',
+        borderRadius: '8px',
+        border: 'none',
+        background: 'white',
+        color: '#4caf50',
+        fontWeight: 'bold',
+        cursor: 'pointer',
     },
     gameOver: {
         textAlign: 'center',

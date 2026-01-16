@@ -67,8 +67,15 @@ serve(async (req) => {
         2. DO NOT mention other specific model names from the same manufacturer that would give it away (e.g. if it's a 911, don't say "It's like a Boxster").
         3. If I ask a question you've already answered, politely remind me (e.g. "Create a memory score! I already told you about the headlights!").
         4. Keep your responses SHORT (under 50 words) to keep the game moving.
-        5. If I guess correctly in the chat, congratulate me, but the actual win happens via the guess form.
+        5. If I guess correctly (Year within +/- 2 years, Make, and Model), set the "won" flag to true.
         6. Don't reveal more than asked for - directly answer my question.
+
+        RESPONSE FORMAT:
+        You must return a JSON object with this structure:
+        {
+            "response": "Your chat response string here",
+            "won": boolean // true if the user guessed the correct car
+        }
         `;
 
         // Transform messages for Gemini API
@@ -81,14 +88,10 @@ serve(async (req) => {
             },
             ...messages.map((m: any) => ({
                 role: m.role === 'user' ? 'user' : 'model',
-                parts: [{ text: m.content }]
+                // Handle legacy string content or new JSON content
+                parts: [{ text: typeof m.content === 'object' ? m.content.response : m.content }]
             }))
         ];
-
-        // NOTE: For 'system_instruction', Gemini 1.5/flash usage often puts it in a separate field, 
-        // but passing it as the first model message usually works for context storage in simple chat.
-        // Let's rely on standard message history for context. 
-        // Better yet, let's use the 'system_instruction' field if using v1beta.
 
         const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
         if (!GEMINI_API_KEY) {
@@ -103,12 +106,12 @@ serve(async (req) => {
             },
             body: JSON.stringify({
                 contents: contents,
-                // System instruction is supported in v1beta for better adherence
                 system_instruction: {
                     parts: [{ text: systemPrompt }]
                 },
                 generationConfig: {
-                    maxOutputTokens: 500, // Increased to prevent mid-sentence truncation
+                    maxOutputTokens: 500,
+                    responseMimeType: "application/json"
                 }
             })
         });
@@ -119,15 +122,19 @@ serve(async (req) => {
         }
 
         const data = await response.json();
-        const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "NO RESPONSE";
+        const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-        // To make this work with 'useChat' which expects a stream or text, we can just return the text.
-        // The default 'useChat' fetcher might expect a stream, but often handles plain text responses too. 
-        // If 'useChat' fails to parse this, we might need a simple shim.
-        // We will return it as plain text.
+        let jsonResponse;
+        try {
+            jsonResponse = JSON.parse(textResponse);
+        } catch (e) {
+            console.error("Failed to parse JSON response:", textResponse);
+            // Fallback
+            jsonResponse = { response: textResponse || "Error parsing response", won: false };
+        }
 
-        return new Response(textResponse, {
-            headers: { ...corsHeaders, 'Content-Type': 'text/plain' }
+        return new Response(JSON.stringify(jsonResponse), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
 
     } catch (error) {
