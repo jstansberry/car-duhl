@@ -119,7 +119,7 @@ const styles = {
     activeButton: {
         padding: '8px 16px',
         backgroundColor: '#a3f7bf',
-        color: '#1a1a2e',
+        color: '#fff',
         border: '1px solid #a3f7bf',
         borderRadius: '20px',
         cursor: 'pointer',
@@ -144,15 +144,16 @@ const styles = {
     factsList: {
         textAlign: 'left',
         fontSize: '0.85rem',
-        color: '#ddd',
+        color: '#000',
         maxWidth: '325px',
-        backgroundColor: 'rgba(0,0,0,0.3)',
+        backgroundColor: '#fff',
         padding: '10px',
         borderRadius: '8px'
     },
     factItem: {
         margin: '5px 0',
-        lineHeight: '1.4'
+        lineHeight: '1.4',
+        color: '#000',
     }
 };
 

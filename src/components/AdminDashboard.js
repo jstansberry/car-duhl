@@ -23,7 +23,7 @@ const AdminDashboard = () => {
                     style={{
                         background: activeTab === 'grand-prix' ? 'var(--primary-color)' : 'transparent',
                         border: '1px solid var(--glass-border)',
-                        color: 'var(--text-color)',
+                        color: '#fff',
                         padding: '10px 20px',
                         borderRadius: '8px',
                         cursor: 'pointer',
@@ -38,7 +38,7 @@ const AdminDashboard = () => {
                     style={{
                         background: activeTab === 'dailywager' ? 'var(--primary-color)' : 'transparent',
                         border: '1px solid var(--glass-border)',
-                        color: 'var(--text-color)',
+                        color: '#fff',
                         padding: '10px 20px',
                         borderRadius: '8px',
                         cursor: 'pointer',

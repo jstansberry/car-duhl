@@ -77,7 +77,7 @@ const GameOverModal = ({ dailyCar, guesses, gameState, score, onClose }) => {
 
                 {guesses.length > 0 ? (
                     <div style={styles.resultPreview}>
-                        <h4>Result Summary:</h4>
+                        <h4 style={{ color: '#000' }}>Result Summary:</h4>
                         {guesses.map((guess, idx) => (
                             <div key={idx} style={styles.previewLine}>
                                 <span style={styles.previewNumber}>{idx + 1}.</span>
@@ -140,7 +140,7 @@ const styles = {
     title: {
         fontSize: '2rem',
         marginBottom: '10px',
-        color: '#ffffff',
+        color: '#2563eb',
     },
     carDisplay: {
         width: '100%',
@@ -163,7 +163,7 @@ const styles = {
     },
     sourceLink: {
         fontSize: '0.8rem',
-        color: '#a3f7bf',
+        color: '#2563eb',
         textDecoration: 'underline'
     },
     stats: {
@@ -173,7 +173,7 @@ const styles = {
     score: {
         fontSize: '2.5rem',
         fontWeight: 'bold',
-        color: '#a3f7bf',
+        color: '#2563eb',
         marginBottom: '5px',
         textShadow: '0 0 10px rgba(163, 247, 191, 0.3)'
     },
@@ -203,11 +203,11 @@ const styles = {
         justifyContent: 'flex-start',
         marginBottom: '5px',
         fontSize: '0.9rem',
-        color: '#ccc',
+        color: '#000',
     },
     previewNumber: {
         marginRight: '10px',
-        color: '#888',
+        color: '#000',
     },
     previewText: {
         flex: 1,

@@ -426,7 +426,7 @@ const ProofSheet = () => {
                     >
                         Reset to Next 30 Days
                     </button>
-                    <span style={{ marginLeft: 'auto', color: '#a3f7bf', alignSelf: 'center', fontWeight: 'bold' }}>
+                    <span style={{ marginLeft: 'auto', color: '#000', alignSelf: 'center', fontWeight: 'bold' }}>
                         {filteredPuzzles.length} results
                     </span>
                 </div>
@@ -827,7 +827,7 @@ const styles = {
     previewTitle: {
         fontSize: '1rem',
         marginBottom: '15px',
-        color: '#a3f7bf'
+        color: '#012062'
     },
     previewWrapper: {
         display: 'inline-block',
@@ -975,7 +975,7 @@ const styles = {
     },
     filterLabel: {
         fontSize: '0.8rem',
-        color: '#ccc',
+        color: '#000',
         fontWeight: 'bold'
     },
     filterInput: {

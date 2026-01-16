@@ -179,7 +179,7 @@ const styles = {
         padding: '10px',
         backgroundColor: '#333',
         color: 'white',
-        border: '1px solid #333',
+        border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',
         fontSize: '16px',
