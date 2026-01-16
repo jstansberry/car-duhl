@@ -121,7 +121,7 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#e94560', // Site theme color
+        backgroundColor: '#4285F4', // Site theme color
         transition: 'border-color 0.2s'
     },
     avatarImage: {
