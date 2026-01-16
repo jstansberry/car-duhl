@@ -128,7 +128,7 @@ const styles = {
     hint: {
         marginTop: '8px',
         fontSize: '0.8rem',
-        color: '#FFFFFF',
+        color: '#000000',
     }
 };
 

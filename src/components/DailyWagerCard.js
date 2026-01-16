@@ -182,7 +182,7 @@ const DailyWagerCard = React.memo(({ auction, userGuessId, initialGuess, winnerD
             {/* Right: Game Controls */}
             <div style={{ flex: '1 1 400px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                    <h3 style={{ margin: 0, color: '#e94560', fontSize: '1.4rem' }}>
+                    <h3 style={{ margin: 0, color: '#FFFFFF', fontSize: '1.4rem' }}>
                         {auction.title || 'Make Your Wager'}
                     </h3>
                     {!auction.is_reserve && (

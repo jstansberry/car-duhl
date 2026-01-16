@@ -240,9 +240,10 @@ export default function DrivingBlindPage() {
                     }}>
                         <div style={{
                             ...styles.bubble,
-                            backgroundColor: m.role === 'user' ? '#0070f3' : '#333',
-                            borderBottomRightRadius: m.role === 'user' ? 0 : 12,
-                            borderBottomLeftRadius: m.role === 'assistant' ? 0 : 12,
+                            backgroundColor: m.role === 'user' ? '#2563EB' : '#F3F4F6',
+                            color: m.role === 'user' ? 'white' : '#1F2937',
+                            borderBottomRightRadius: m.role === 'user' ? 0 : 18,
+                            borderBottomLeftRadius: m.role === 'assistant' ? 0 : 18,
                         }}>
                             {/* Filter out JSON artifacts if any slipped through legacy state */}
                             {m.role === 'assistant' && <span style={styles.avatar}>🚙 </span>}
@@ -303,15 +304,15 @@ export default function DrivingBlindPage() {
 
             {/* Progress Badges */}
             <div style={styles.badgesContainer}>
-                <div style={{ ...styles.badge, borderColor: solvedAttributes.year ? '#4caf50' : '#444' }}>
+                <div style={{ ...styles.badge, borderColor: solvedAttributes.year ? '#2563EB' : '#E5E7EB' }}>
                     <div style={styles.badgeLabel}>YEAR</div>
                     <div style={styles.badgeValue}>{solvedAttributes.year || '???'}</div>
                 </div>
-                <div style={{ ...styles.badge, borderColor: solvedAttributes.make ? '#4caf50' : '#444' }}>
+                <div style={{ ...styles.badge, borderColor: solvedAttributes.make ? '#2563EB' : '#E5E7EB' }}>
                     <div style={styles.badgeLabel}>MAKE</div>
                     <div style={styles.badgeValue}>{solvedAttributes.make || '???'}</div>
                 </div>
-                <div style={{ ...styles.badge, borderColor: solvedAttributes.model ? '#4caf50' : '#444' }}>
+                <div style={{ ...styles.badge, borderColor: solvedAttributes.model ? '#2563EB' : '#E5E7EB' }}>
                     <div style={styles.badgeLabel}>MODEL</div>
                     <div style={styles.badgeValue}>{solvedAttributes.model || '???'}</div>
                 </div>
@@ -364,102 +365,113 @@ const styles = {
     chatWindow: {
         height: '400px',
         overflowY: 'auto',
-        background: 'rgba(255,255,255,0.05)',
+        background: '#FFFFFF',
         borderRadius: '12px',
-        padding: '15px',
-        marginBottom: '15px',
-        border: '1px solid #333',
+        padding: '20px',
+        marginBottom: '20px',
+        border: '1px solid #E5E7EB',
+        boxShadow: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
     },
     messageRow: {
         display: 'flex',
-        marginBottom: '10px',
+        marginBottom: '15px',
     },
     bubble: {
-        padding: '10px 14px',
-        borderRadius: '12px',
+        padding: '12px 18px',
+        borderRadius: '18px',
         maxWidth: '80%',
-        lineHeight: '1.4',
-        fontSize: '0.95rem',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        lineHeight: '1.5',
+        fontSize: '1rem',
+        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
     },
     avatar: {
-        marginRight: '5px',
+        marginRight: '8px',
     },
     inputArea: {
         marginBottom: '30px',
     },
     chatForm: {
         display: 'flex',
-        gap: '10px',
+        gap: '12px',
     },
     textInput: {
         flex: 1,
-        padding: '12px',
+        padding: '12px 16px',
         borderRadius: '8px',
-        border: '1px solid #444',
-        background: '#222',
-        color: 'white',
+        border: '1px solid #E5E7EB',
+        background: '#FFFFFF',
+        color: '#1F2937',
         fontSize: '1rem',
     },
     sendButton: {
-        padding: '0 20px',
+        padding: '0 24px',
         borderRadius: '8px',
         border: 'none',
-        background: '#2196f3',
+        background: '#2563EB',
         color: 'white',
-        fontWeight: 'bold',
+        fontWeight: '600',
         cursor: 'pointer',
+        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
     },
     loading: {
         textAlign: 'center',
-        opacity: 0.5,
-        fontSize: '0.8rem',
+        opacity: 0.6,
+        fontSize: '0.875rem',
         marginTop: '10px',
+        color: '#6B7280',
     },
     guessSection: {
         marginTop: '20px',
-        borderTop: '1px solid #333',
+        borderTop: '1px solid #E5E7EB',
         paddingTop: '20px',
     },
     victory: {
         textAlign: 'center',
         padding: '20px',
-        background: '#4caf50',
-        borderRadius: '8px',
+        background: '#D1FAE5', /* Soft Green */
+        borderRadius: '12px',
         fontWeight: 'bold',
-        color: 'black',
+        color: '#065F46',
+        border: '1px solid #A7F3D0',
     },
 
     gameOver: {
         textAlign: 'center',
-        padding: '15px',
-        background: '#e94560',
-        borderRadius: '8px',
+        padding: '20px',
+        background: '#FEE2E2', /* Soft Red */
+        borderRadius: '12px',
         fontWeight: 'bold',
+        color: '#991B1B',
+        border: '1px solid #FECACA',
     },
     badgesContainer: {
         display: 'flex',
         justifyContent: 'space-between',
-        gap: '10px',
+        gap: '12px',
         width: '100%',
+        marginTop: '20px',
     },
     badge: {
         flex: 1,
-        border: '2px solid #444',
+        border: '1px solid #E5E7EB',
         borderRadius: '8px',
-        padding: '10px',
+        padding: '12px',
         textAlign: 'center',
-        background: '#222',
+        background: '#FFFFFF',
         transition: 'all 0.3s ease',
+        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
     },
     badgeLabel: {
-        fontSize: '0.7rem',
-        color: '#aaa',
-        marginBottom: '5px',
+        fontSize: '0.75rem',
+        color: '#6B7280',
         fontWeight: 'bold',
+        marginBottom: '4px',
+        textTransform: 'uppercase',
     },
     badgeValue: {
-        fontSize: '0.9rem',
+        fontSize: '1rem',
         fontWeight: 'bold',
-    }
+        color: '#1F2937',
+    },
+
 };

@@ -112,8 +112,8 @@ const styles = {
         maxHeight: '80vh', // Ensure it fits on screen
         display: 'flex',
         flexDirection: 'column',
-        border: '1px solid #e94560',
-        boxShadow: '0 0 20px rgba(233, 69, 96, 0.2)'
+        border: '1px solid #6b45e9ff',
+        boxShadow: '0 0 20px rgba(72, 69, 233, 0.2)'
     },
     header: {
         display: 'flex',

@@ -57,15 +57,15 @@ const GameSwitcher = () => {
     return (
         <div ref={dropdownRef} style={{ position: 'relative', zIndex: 100 }}>
             {/* Trigger Button */}
+            {/* Trigger Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    background: '#222',
+                    border: '1px solid #444',
                     borderRadius: '30px',
-                    padding: '4px 7px',
-                    color: '#fff',
+                    padding: '6px 14px',
+                    color: '#FFFFFF',
                     fontFamily: "'Roboto Condensed', sans-serif",
                     fontWeight: 'bold',
                     fontSize: '0.85rem',
@@ -74,17 +74,9 @@ const GameSwitcher = () => {
                     alignItems: 'center',
                     gap: '6px',
                     transition: 'all 0.3s ease',
-                    boxShadow: isOpen ? '0 0 15px rgba(233, 69, 96, 0.4)' : 'none',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.3)',
                     minWidth: '180px',
                     justifyContent: 'space-between'
-                }}
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-                    e.currentTarget.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                    e.currentTarget.style.transform = 'translateY(0)';
                 }}
             >
                 {getCurrentLabel()}
@@ -92,7 +84,8 @@ const GameSwitcher = () => {
                     transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                     transition: 'transform 0.3s ease',
                     fontSize: '0.8rem',
-                    opacity: 0.7
+                    opacity: 0.7,
+                    color: '#CCCCCC'
                 }}>
                     ▼
                 </span>
@@ -106,13 +99,13 @@ const GameSwitcher = () => {
                     right: 0,
                     width: '100%',
                     minWidth: '220px',
-                    background: 'rgba(20, 20, 30, 0.95)',
-                    backdropFilter: 'blur(15px)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: '#1a1a1a', /* Dark bg */
+                    border: '1px solid #333',
                     borderRadius: '12px',
                     overflow: 'hidden',
-                    boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
-                    animation: 'slideDown 0.2s ease-out'
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5)',
+                    animation: 'slideDown 0.2s ease-out',
+                    zIndex: 101,
                 }}>
                     <style>
                         {`
@@ -130,19 +123,19 @@ const GameSwitcher = () => {
                             display: 'flex',
                             alignItems: 'center',
                             gap: '12px',
-                            color: '#fff',
+                            color: '#FFFFFF',
                             cursor: 'pointer',
                             transition: 'background 0.2s',
-                            borderBottom: '1px solid rgba(255,255,255,0.05)',
-                            background: currentGame === 'grand-prix' ? 'rgba(233, 69, 96, 0.2)' : 'transparent'
+                            borderBottom: '1px solid #333',
+                            background: currentGame === 'grand-prix' ? '#333' : 'transparent'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
-                        onMouseLeave={(e) => e.currentTarget.style.background = currentGame === 'grand-prix' ? 'rgba(233, 69, 96, 0.2)' : 'transparent'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = currentGame === 'grand-prix' ? '#333' : 'transparent'}
                     >
                         <span style={{ fontSize: '1.2rem' }}>🏁</span>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>THE GRAND PRIX</span>
-                            <span style={{ fontSize: '0.7rem', color: '#aaa' }}>Guess the car</span>
+                            <span style={{ fontSize: '0.7rem', color: '#999' }}>Guess the car</span>
                         </div>
                     </div>
 
@@ -153,19 +146,19 @@ const GameSwitcher = () => {
                             display: 'flex',
                             alignItems: 'center',
                             gap: '12px',
-                            color: '#fff',
+                            color: '#FFFFFF',
                             cursor: 'pointer',
                             transition: 'background 0.2s',
-                            borderBottom: '1px solid rgba(255,255,255,0.05)',
-                            background: currentGame === 'driving-blind' ? 'rgba(233, 69, 96, 0.2)' : 'transparent'
+                            borderBottom: '1px solid #333',
+                            background: currentGame === 'driving-blind' ? '#333' : 'transparent'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
-                        onMouseLeave={(e) => e.currentTarget.style.background = currentGame === 'driving-blind' ? 'rgba(233, 69, 96, 0.2)' : 'transparent'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = currentGame === 'driving-blind' ? '#333' : 'transparent'}
                     >
                         <span style={{ fontSize: '1.2rem' }}>😎</span>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>DRIVING BLIND</span>
-                            <span style={{ fontSize: '0.7rem', color: '#aaa' }}>Explore mystery car</span>
+                            <span style={{ fontSize: '0.7rem', color: '#999' }}>Explore mystery car</span>
                         </div>
                     </div>
 
@@ -176,17 +169,17 @@ const GameSwitcher = () => {
                             display: 'flex',
                             alignItems: 'center',
                             gap: '12px',
-                            color: '#fff',
+                            color: '#FFFFFF',
                             cursor: 'pointer',
                             transition: 'background 0.2s'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
                         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
                         <span style={{ fontSize: '1.2rem' }}>💰</span>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>THE DAILY WAGER</span>
-                            <span style={{ fontSize: '0.7rem', color: '#aaa' }}>Guess the price</span>
+                            <span style={{ fontSize: '0.7rem', color: '#999' }}>Guess the price</span>
                         </div>
                     </div>
                 </div>

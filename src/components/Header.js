@@ -32,16 +32,16 @@ const Header = () => {
                             width: '32px',
                             height: '32px',
                             borderRadius: '50%',
-                            backgroundColor: '#333',
-                            color: '#fff',
-                            border: 'none',
+                            backgroundColor: '#333', /* Dark Gray */
+                            color: '#FFFFFF',
+                            border: '1px solid #444',
                             fontSize: '1.2rem',
                             fontWeight: 'bold',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            transition: 'background-color 0.2s, transform 0.1s'
+                            transition: 'all 0.2s',
                         }}
                         onClick={() => setShowHelp(true)}
                         title="How to Play"

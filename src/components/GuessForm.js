@@ -179,7 +179,7 @@ const styles = {
         padding: '10px',
         backgroundColor: '#333',
         color: 'white',
-        border: 'none',
+        border: '1px solid #333',
         borderRadius: '4px',
         cursor: 'pointer',
         fontSize: '16px',
@@ -192,10 +192,9 @@ const styles = {
         marginTop: '5px'
     },
     solvedInput: {
-        border: '2px solid #4caf50',
+        border: '1px solid #4caf50',
         backgroundColor: '#e8f5e9',
-        color: '#2e7d32',
-        fontWeight: 'bold'
+        color: '#2e7d32'
     }
 };
 
