@@ -263,9 +263,9 @@ export default function DrivingBlindPage() {
                     </div>
                 ) : gameState === 'playing' && gasTank > 0 ? (
                     <form onSubmit={(e) => {
-                        if ((input || '').length > 100) {
+                        if ((input || '').length > 150) {
                             e.preventDefault();
-                            alert("Keep it short! Under 100 chars.");
+                            alert("Keep it short! Under 150 chars.");
                             return;
                         }
                         handleMessageSubmit(e);
@@ -276,7 +276,7 @@ export default function DrivingBlindPage() {
                             value={input}
                             onChange={handleInputChange}
                             placeholder="Ask about the car..."
-                            maxLength={100}
+                            maxLength={150}
                             style={styles.textInput}
                             disabled={isLoading}
                         />

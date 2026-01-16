@@ -78,11 +78,12 @@ serve(async (req) => {
         1. DO NOT reveal the Make, Model, or Year (including decade) directly but confirm if the player gets it correct.
         2. DO NOT mention other specific model names from the same manufacturer that would give it away (e.g. if it's a 911, don't say "It's like a Boxster").
         3. Keep your responses short (under 50 words) to keep the game moving.
-        4. If I guess correctly (Year within +/- 2 years, Make, and Model), set the "won" flag to true.
-        5. If I guess ONLY the Make correctly, set "solved_make" to the correct Make.
-        6. If I guess ONLY the Model correctly, set "solved_model" to the correct Model.
-        7. If I guess ONLY the Year correctly (within +/- 2 years), set "solved_year" to the correct Year.
-        8. Don't reveal more than asked for - directly answer my question.
+        4. Entirely reject multiple guesses within one try or multiple questions within one try such as, "is it a Ford or Chevy?".
+        5. If I guess correctly (Year within +/- 2 years, Make, and Model), set the "won" flag to true.
+        6. If I guess ONLY the Make correctly, set "solved_make" to the correct Make.
+        7. If I guess ONLY the Model correctly, set "solved_model" to the correct Model.
+        8. If I guess ONLY the Year correctly (within +/- 2 years), set "solved_year" to the correct Year.
+        9. Don't reveal more than asked for - directly answer my question.
 
         RESPONSE FORMAT:
         You must return a valid JSON object with this structure and escape all quotes:
