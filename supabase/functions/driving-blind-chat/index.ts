@@ -75,7 +75,7 @@ serve(async (req) => {
         Your goal is to help me guess the car by describing its attributes and specs. Sometimes simple facts will suffice.
         
         RULES:
-        1. DO NOT reveal the Make, Model, or Year directly but confirm if the player gets it correct.
+        1. DO NOT reveal the Make, Model, or Year (including decade) directly but confirm if the player gets it correct.
         2. DO NOT mention other specific model names from the same manufacturer that would give it away (e.g. if it's a 911, don't say "It's like a Boxster").
         3. Keep your responses short (under 50 words) to keep the game moving.
         4. If I guess correctly (Year within +/- 2 years, Make, and Model), set the "won" flag to true.

@@ -58,18 +58,18 @@ const styles = {
         maxWidth: '800px',
         margin: '40px auto',
         padding: '30px',
-        color: '#fff',
+        color: '#000',
         textAlign: 'left',
         lineHeight: '1.6'
     },
     title: {
         fontSize: '2.5rem',
         marginBottom: '10px',
-        color: '#ffffff'
+        color: '#000'
     },
     date: {
         fontSize: '0.9rem',
-        color: '#888',
+        color: '#666',
         marginBottom: '30px'
     },
     section: {
@@ -78,7 +78,7 @@ const styles = {
     heading: {
         fontSize: '1.5rem',
         marginBottom: '10px',
-        color: '#ffffff',
+        color: '#000',
         borderBottom: '1px solid #333',
         paddingBottom: '5px'
     }

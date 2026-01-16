@@ -19,7 +19,12 @@ const AboutUs = () => {
                 <h2 style={styles.heading}>The Team</h2>
                 <p>My Daily Garage is built by a small team of passionate developers and car enthusiasts.</p>
             </section>
-        </div>
+
+            <section style={styles.section}>
+                <h2 style={styles.heading}>License</h2>
+                <p>Copyright (c) 2026 The Stansberry Group - My Daily Garage. All Rights Reserved.</p>
+            </section>
+        </div >
     );
 };
 
@@ -28,14 +33,14 @@ const styles = {
         maxWidth: '800px',
         margin: '40px auto',
         padding: '30px',
-        color: '#fff',
+        color: '#000',
         textAlign: 'left',
         lineHeight: '1.6'
     },
     title: {
         fontSize: '2.5rem',
         marginBottom: '30px',
-        color: '#ffffff'
+        color: '#000'
     },
     section: {
         marginBottom: '20px'
@@ -43,7 +48,7 @@ const styles = {
     heading: {
         fontSize: '1.5rem',
         marginBottom: '10px',
-        color: '#ffffff',
+        color: '#000',
         borderBottom: '1px solid #333',
         paddingBottom: '5px'
     }
