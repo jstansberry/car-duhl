@@ -23,6 +23,7 @@ export default function RootLayout({ children }) {
                             <div className="footer-content">
                                 <span>&copy; 2026 My Daily Garage</span>
                                 <a href="/privacy" className="footer-link">Privacy Policy</a>
+                                <a href="/terms" className="footer-link">Terms of Service</a>
                                 <a href="/contact" className="footer-link">Contact Us</a>
                                 <a href="/about" className="footer-link">About Us</a>
                                 <a href="/" className="footer-link">Home</a>
