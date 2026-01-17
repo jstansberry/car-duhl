@@ -285,7 +285,7 @@ const DailyWagerAdmin = () => {
                                 />
                             </label>
                             {formData.is_reserve && (
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#fff', marginTop: '20px' }}>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#000', marginTop: '20px' }}>
                                     <input
                                         type="checkbox"
                                         checked={formData.reserve_met}
