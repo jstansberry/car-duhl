@@ -5,6 +5,8 @@ import React, { useState, useEffect } from 'react';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../../lib/supabaseClient';
 
 
+const INITIAL_SYSTEM_MESSAGE = "You're blindfolded sitting in a mystery vehicle! Ask me anything about it but I won't tell you the make, model, or year unless you guess it correctly!";
+
 export default function DrivingBlindPage() {
     // Game State
     const [gameState, setGameState] = useState('playing'); // playing, won, lost
@@ -16,7 +18,7 @@ export default function DrivingBlindPage() {
 
     // Manual Chat State Management
     const [messages, setMessages] = useState([
-        { id: 'system-start', role: 'assistant', content: "THIS... is a mystery car! I'm sitting beside you in the passenger seat. You're blindfolded. Ask me anything about the vehicle you're in but not the make, model, or year!" }
+        { id: 'system-start', role: 'assistant', content: INITIAL_SYSTEM_MESSAGE }
     ]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -151,7 +153,7 @@ export default function DrivingBlindPage() {
 
                 // Reset State in Memory
                 setMessages([
-                    { id: 'system-start', role: 'assistant', content: "THIS... is a mystery car! I'm sitting beside you in the passenger seat. You're blindfolded. Ask me anything about the vehicle you're in but not the make, model, or year!" }
+                    { id: 'system-start', role: 'assistant', content: INITIAL_SYSTEM_MESSAGE }
                 ]);
                 setGasTank(100);
                 setSolvedAttributes({ make: null, model: null, year: null });
@@ -278,7 +280,6 @@ export default function DrivingBlindPage() {
                             placeholder="Ask about the car..."
                             maxLength={100}
                             style={styles.textInput}
-                            disabled={isLoading}
                         />
                         <button type="submit" style={styles.sendButton} disabled={isLoading || !input.trim()}>
                             SEND
@@ -363,7 +364,7 @@ const styles = {
         transition: 'width 0.5s ease',
     },
     chatWindow: {
-        height: '400px',
+        height: '300px',
         overflowY: 'auto',
         background: '#FFFFFF',
         borderRadius: '12px',
