@@ -39,11 +39,12 @@ const DailyWagerCard = React.memo(({ auction, userGuessId, initialGuess, winnerD
             if (diff <= 0 || auction.status === 'settled') {
                 setIsEnded(true);
                 setIsLocked(true);
-                setTimeLeft("Auction Ended");
+                const endDate = new Date(auction.auction_end_time).toLocaleDateString();
+                setTimeLeft(`Auction Ended - ${endDate}`);
                 return true; // Return signal to clear interval
             }
 
-            const fortyEightHoursMs = 48 * 60 * 60 * 1000;
+            const twentyFourHoursMs = 24 * 60 * 60 * 1000;
 
             // Format time display
             // "if the auction expiration time is more than 48 hrs, just say, e.g. '3 days' instead of the exact timestamp"
@@ -51,7 +52,7 @@ const DailyWagerCard = React.memo(({ auction, userGuessId, initialGuess, winnerD
             // If diff > 48h ...
             // Also need to check lock state.
 
-            if (diff < fortyEightHoursMs) {
+            if (diff < twentyFourHoursMs) {
                 // < 48h left -> LOCKED.
                 setIsLocked(true);
                 // "a countdown timer ticking backwards that represents how much time before the auction ends"
@@ -60,8 +61,8 @@ const DailyWagerCard = React.memo(({ auction, userGuessId, initialGuess, winnerD
                 // > 48h left -> OPEN.
                 setIsLocked(false);
                 // "a countdown timer ticking backwards that represents how much time a user has left to place a daily wager"
-                // Time left to wager = diff - 48h.
-                const timeToWager = diff - fortyEightHoursMs;
+                // Time left to wager = diff - 24h.
+                const timeToWager = diff - twentyFourHoursMs;
 
                 // If the total time left is significantly huge (e.g. > 72h), maybe simplify? 
                 // Requests: "just say, e.g. '3 days' instead of the exact timestamp" if exp > 48h.
@@ -302,10 +303,16 @@ const DailyWagerCard = React.memo(({ auction, userGuessId, initialGuess, winnerD
                                 fontWeight: 'bold'
                             }}>$</span>
                             <input
-                                type="number"
-                                min="0"
+                                type="text"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
                                 value={bidAmount}
-                                onChange={(e) => setBidAmount(e.target.value)}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || /^\d+$/.test(val)) {
+                                        setBidAmount(val);
+                                    }
+                                }}
                                 disabled={isLocked}
                                 placeholder="0"
                                 style={{

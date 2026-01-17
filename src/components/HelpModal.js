@@ -50,7 +50,7 @@ const HelpModal = ({ onClose }) => {
                                     <li>For <strong>Reserve</strong> auctions, you must correctly predict if the car will sell ("Meets Reserve") or not ("Reserve Not Met"). If you guess this outcome wrong, your bid is disqualified!</li>
                                 </ul>
                             </li>
-                            <li><strong>Scheduling:</strong> You can only wager on the outcome up to 48 hours before the auction is scheduled to end. You may not change your wager within 48 hours of auction end also.</li>
+                            <li><strong>Scheduling:</strong> You can only wager on the outcome up to 24 hours before the auction is scheduled to end. You may not change your wager within 24 hours of auction end also.</li>
                             <li><strong>Winning:</strong> The player with the correct Reserve prediction and the price closest to the final bid wins.</li>
                             <li><strong>Tie-Breaker:</strong> If two guesses are equally close, the lower guess wins. If still tied, the earlier guess wins.</li>
                         </ul>

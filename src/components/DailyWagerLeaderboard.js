@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 
 const DailyWagerLeaderboard = () => {
-    const { user } = useAuth();
+    const { user, openLoginModal } = useAuth();
     const [leaders, setLeaders] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -46,7 +46,10 @@ const DailyWagerLeaderboard = () => {
 
             <div style={styles.listContainer}>
                 {!user && (
-                    <div style={styles.loginPrompt}>
+                    <div
+                        style={styles.loginPrompt}
+                        onClick={openLoginModal}
+                    >
                         Login to play!
                     </div>
                 )}
@@ -247,7 +250,8 @@ const styles = {
         color: '#000',
         textAlign: 'center',
         fontSize: '0.9rem',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        cursor: 'pointer'
     }
 };
 

@@ -7,7 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import AdSense from './AdSense';
 
 const GrandPrixLeaderboard = ({ initialLeaderboard }) => {
-    const { user } = useAuth();
+    const { user, openLoginModal } = useAuth();
     const pathname = usePathname();
     const [leaders, setLeaders] = useState(initialLeaderboard || []);
     const [loading, setLoading] = useState(!initialLeaderboard);
@@ -20,7 +20,7 @@ const GrandPrixLeaderboard = ({ initialLeaderboard }) => {
                     .select('*')
                     .select('*')
                     .order('total_score', { ascending: false }) // Ensure sorted for ranking
-                    .limit(10);
+                    .limit(20);
 
                 if (leaderboardError) throw leaderboardError;
 
@@ -82,7 +82,10 @@ const GrandPrixLeaderboard = ({ initialLeaderboard }) => {
 
                 <div style={styles.listContainer}>
                     {!user && (
-                        <div style={styles.loginPrompt}>
+                        <div
+                            style={styles.loginPrompt}
+                            onClick={openLoginModal}
+                        >
                             Login to play!
                         </div>
                     )}
@@ -139,7 +142,7 @@ const GrandPrixLeaderboard = ({ initialLeaderboard }) => {
                     )}
                 </div>
                 <div style={styles.footer}>
-                    TOP 10
+                    TOP 20
                 </div>
             </div>
 
@@ -298,7 +301,8 @@ const styles = {
         color: '#000',
         textAlign: 'center',
         fontSize: '0.9rem',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        cursor: 'pointer'
     },
     adContainer: {
         width: '280px',

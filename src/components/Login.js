@@ -4,8 +4,7 @@ import PastGamesModal from './PastGamesModal';
 import LoginModal from './LoginModal';
 
 const Login = () => {
-    const { user, loginWithGoogle, logout, isAdmin, profile } = useAuth();
-    const [showLoginModal, setShowLoginModal] = useState(false);
+    const { user, loginWithGoogle, logout, isAdmin, profile, showLoginModal, openLoginModal, closeLoginModal } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [showPastGames, setShowPastGames] = useState(false);
     const dropdownRef = useRef(null);
@@ -32,10 +31,10 @@ const Login = () => {
     if (!user) {
         return (
             <>
-                <button onClick={() => setShowLoginModal(true)} className="google-login-button">
+                <button onClick={openLoginModal} className="google-login-button">
                     Login
                 </button>
-                {showLoginModal && <div style={{ position: 'absolute', zIndex: 1000 }}><LoginModal onClose={() => setShowLoginModal(false)} /></div>}
+                {showLoginModal && <div style={{ position: 'absolute', zIndex: 1000 }}><LoginModal onClose={closeLoginModal} /></div>}
             </>
         );
     }

@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [profileLoaded, setProfileLoaded] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
     // Ref to prevent duplicate profile fetches
     const fetchingProfileRef = React.useRef(null);
@@ -129,6 +130,9 @@ export const AuthProvider = ({ children }) => {
         window.location.reload();
     };
 
+    const openLoginModal = () => setShowLoginModal(true);
+    const closeLoginModal = () => setShowLoginModal(false);
+
     const value = {
         user,
         session,
@@ -137,7 +141,10 @@ export const AuthProvider = ({ children }) => {
         loginWithGoogle,
         logout,
         loading,
-        profileLoaded
+        profileLoaded,
+        showLoginModal,
+        openLoginModal,
+        closeLoginModal
     };
 
     return (

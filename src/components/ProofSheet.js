@@ -524,7 +524,7 @@ const ProofSheet = () => {
 
                         <div style={styles.field}>
                             <label style={styles.label}>Image Source / Credit URL:</label>
-                            <input type="url" value={formData.source} onChange={e => setFormData({ ...formData, source: e.target.value })} placeholder="https://..." style={styles.crudInput} />
+                            <input type="url" value={formData.source} onChange={e => setFormData({ ...formData, source: e.target.value })} placeholder="https://..." required style={styles.crudInput} />
                         </div>
 
                         <div style={styles.formRow}>

@@ -9,7 +9,27 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 
 const DailyWagerList = ({ initialAuctions, initialResults }) => {
     const { user } = useAuth();
-    const [auctions] = useState(initialAuctions); // Auctions from server are static for this view
+    const [auctions] = useState(() => {
+        const threeDaysAgo = new Date();
+        threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+        const cutoffString = threeDaysAgo.toISOString().split('T')[0];
+
+        return initialAuctions.filter(a => {
+            // Keep if NOT settled OR (settled AND date >= 3 days ago)
+            // Assuming 'status' field or date comparison. 
+            // If we rely purely on date:
+            if (a.status === 'settled' || new Date(a.date) < threeDaysAgo) {
+                // But wait, upcoming auctions are fine. 
+                // The request is "hide cars that have settled more than 3 days ago".
+                // So if status is settled AND date is old, hide it.
+                // Let's assume date is the auction date.
+                if (a.date < cutoffString && (a.status === 'settled' || a.status === 'closed')) {
+                    return false;
+                }
+            }
+            return true;
+        });
+    });
     const [userGuesses, setUserGuesses] = useState({});
 
     // We can fetch guesses on mount just like before, or pass them if we SSR'd them (but user auth is tricky on server for initial render if using static gen, 
